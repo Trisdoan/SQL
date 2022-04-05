@@ -6,7 +6,8 @@ You can view his course here: https://www.datawithdanny.com/
 - [Case Study Overview](#case-study-overview)
 - [Requirements](#requirements)
 - [Entity Relationship Diagram](#entity-relationship-diagram)
-- [Solution on Github](https://github.com/Trisdoan/SQL/blob/95ed34a91f105caac63dda2b372fe0c1079c2dec/Marketing_Analytics/code.sql)
+- [Solving problem](https://github.com/Trisdoan/SQL/blob/95ed34a91f105caac63dda2b372fe0c1079c2dec/Marketing_Analytics/code.sql)
+- [code](https://github.com/Trisdoan/SQL/blob/95ed34a91f105caac63dda2b372fe0c1079c2dec/Marketing_Analytics/code.sql)
 
 ***
 
