@@ -41,7 +41,7 @@ Click the link to see my code!
 </summary>
   
 1. Approach to solve problem:
-2. Code:https://github.com/Trisdoan/SQL/blob/95ed34a91f105caac63dda2b372fe0c1079c2dec/Marketing_Analytics/code.sql
+2. Code: https://github.com/Trisdoan/SQL/blob/95ed34a91f105caac63dda2b372fe0c1079c2dec/Marketing_Analytics/code.sql
 
 </details>
   
