@@ -6,8 +6,7 @@ You can view his course here: https://www.datawithdanny.com/
 - [Case Study Overview](#case-study-overview)
 - [Requirements](#requirements)
 - [Entity Relationship Diagram](#entity-relationship-diagram)
-- Solving problem here: (https://github.com/Trisdoan/SQL/blob/95ed34a91f105caac63dda2b372fe0c1079c2dec/Marketing_Analytics/code.sql)
-- Code here (https://github.com/Trisdoan/SQL/blob/95ed34a91f105caac63dda2b372fe0c1079c2dec/Marketing_Analytics/code.sql)
+- [Solving problem and code](#solving-problem-and-code)
 
 ***
 
@@ -34,4 +33,17 @@ The marketing team have shared with us a draft of the email they wish to send to
 
 ## Entity Relationship Diagram
 ![ERD](https://user-images.githubusercontent.com/88806544/161838741-8d4b8abe-5c74-4658-9fc9-ace1a7ead26b.png)
+
+## Solving problem and code
+<details>
+<summary>
+Click the link to see my code!
+</summary>
+  
+1. Approach to solve problem:
+2. Code:https://github.com/Trisdoan/SQL/blob/95ed34a91f105caac63dda2b372fe0c1079c2dec/Marketing_Analytics/code.sql
+
+</details>
+  
 ***
+
