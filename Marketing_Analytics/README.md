@@ -6,7 +6,7 @@ You can view his course here: https://www.datawithdanny.com/
 - [Case Study Overview](#case-study-overview)
 - [Requirements](#requirements)
 - [Entity Relationship Diagram](#entity-relationship-diagram)
-- [Solution on Github](https://github.com/katiehuangx/8-Week-SQL-Challenge/blob/main/Case%20Study%20%231%20-%20Danny's%20Diner/Danny's%20Diner%20Solution.md)
+- [Solution on Github](https://github.com/Trisdoan/SQL/blob/95ed34a91f105caac63dda2b372fe0c1079c2dec/Marketing_Analytics/code.sql)
 
 ***
 
