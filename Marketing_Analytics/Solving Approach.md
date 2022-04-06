@@ -16,7 +16,7 @@ Click here to view step-by-step plan
 1. Creating complete dataset which joins essential tables.
 2. Calculate customer rental counts for each category.
 3. Calculate total films each customer watched.
-4. Identify top 2 categories for each customer
+4. Identify top 2 categories for each customer.
 5. Calculate average rental count
 6. Identify percentile for each customer's top category film count
 7. Generate first top category insight => Shows how many more film each customer watched more than average customer
@@ -36,28 +36,6 @@ Click here to view step-by-step plan
 ***
 
 ### 1. Create complete dataset
-
-````sql
-DROP TABLE IF EXISTS complete_data_table;
-CREATE TEMP TABLE complete_data_table  AS(
-    Select
-        A.customer_id,
-        A.rental_id,
-        A.rental_date,
-        E.name as category_name,
-        C.film_id,
-        C.title
-    From dvd_rentals.rental A 
-    INNER JOIN dvd_rentals.inventory B 
-        On A.inventory_id = B.inventory_id
-    INNER JOIN dvd_rentals.film C 
-        On B.film_id = C.film_id
-    INNER JOIN dvd_rentals.film_category D 
-        On C.film_id = D.film_id
-    INNER JOIN dvd_rentals.category E 
-        On D.category_id = E.category_id
-);
-````
 
 #### Steps:
 - Use **INNER JOIN** to merge ```rental```, ```inventory``` ,```film```,```film_category```and```category```.
@@ -86,8 +64,34 @@ Click here to view results
 
 </details>
 
+````sql
+DROP TABLE IF EXISTS complete_data_table;
+CREATE TEMP TABLE complete_data_table  AS(
+    Select
+        A.customer_id,
+        A.rental_id,
+        A.rental_date,
+        E.name as category_name,
+        C.film_id,
+        C.title
+    From dvd_rentals.rental A 
+    INNER JOIN dvd_rentals.inventory B 
+        On A.inventory_id = B.inventory_id
+    INNER JOIN dvd_rentals.film C 
+        On B.film_id = C.film_id
+    INNER JOIN dvd_rentals.film_category D 
+        On C.film_id = D.film_id
+    INNER JOIN dvd_rentals.category E 
+        On D.category_id = E.category_id
+);
+````
+
 
 ### 2. Customer rental counts for each category
+
+#### Steps:
+- Use **Count** and **Group By** to answer how many film each customer watched per category.
+- Use **Max** to find the latest rented date per each customer. It will be useful in later step where ranking.
 
 ````sql
 DROP TABLE IF EXISTS category_counts ;
@@ -103,12 +107,10 @@ CREATE TEMP TABLE category_counts AS(
 );
 ````
 
-#### Steps:
-- Use **Count** and **Group By** to answer how many film each customer watched per category.
-- Use **Max** to find the latest rented date per each customer. It will be useful in later step where ranking.
-
-
 ### 3. Total films each customer watched
+
+#### Steps:
+- Use **Sum** and **Group By** to answer how many film each customer watched in total.
 
 ````sql
 DROP TABLE IF EXISTS total_counts ;
@@ -121,7 +123,83 @@ CREATE TEMP TABLE total_counts AS(
 );
 ````
 
+### 4. Top 2 categories for each customer
+
 #### Steps:
-- Use **Sum** and **Group By** to answer how many film each customer watched in total.
+- Use **CTE** and **Dense_Rank()** to rank categories based on rental count and latest rental date.
+- Select records where categories in the top 2
+
+````sql
+DROP TABLE IF EXISTS top_categories ;
+CREATE TEMP TABLE top_categories AS
+  WITH cte AS(
+    Select
+        customer_id,
+        category_name,
+        rental_count,
+        DENSE_RANK() OVER(PARTITION BY customer_id ORDER BY rental_count DESC, 
+                                                            latest_rental_date) 
+        AS ranked_category
+    From category_counts
+)
+    Select *
+    From cte
+    WHERE ranked_category <=2;
+````
+
+### 5. Average rental count per category
+
+#### Steps:
+- Use **AVG()** to answer how many did customers watched on each category on average.
+- Use **Floor** to get the nearest integer.
+
+````sql
+DROP TABLE IF EXISTS average_category_count ;
+CREATE TEMP TABLE average_category_count AS(
+    Select
+        category_name,
+        ---round down to nearest int
+        FLOOR(AVG(rental_count)) as avg_category_count
+    From category_counts
+    GROUP BY category_name
+);
+````
+
+### 6. Average rental count per category
+
+#### Steps:
+- Use 
+
+````sql
+DROP TABLE IF EXISTS top_category_percentile;
+CREATE TEMP TABLE top_category_percentile AS
+  With cte AS(
+    Select
+        B.customer_id,
+        B.category_name as top_category_name,
+        B.ranked_category,
+        A.rental_count,
+        A.category_name,
+        PERCENT_RANK() OVER (
+            PARTITION BY A.category_name 
+            ORDER BY A.rental_count DESC
+          ) AS percentile_value
+    From category_counts A 
+    LEFT JOIN top_categories B 
+        On A.customer_id = B.customer_id
+)
+      Select
+        customer_id,
+        category_name,
+        rental_count,
+        ranked_category,
+        CASE
+            WHEN ROUND(100*percentile_value) = 0 then 1 
+            ELSE ROUND(100*percentile_value)
+         END AS percentile
+      From cte
+      WHERE ranked_category = 1
+          AND top_category_name = category_name;
+````
 
 ***
