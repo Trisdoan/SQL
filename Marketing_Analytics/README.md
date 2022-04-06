@@ -1,5 +1,6 @@
 # Case Study: Marketing Analytics
 CREDIT: Danny Ma.
+
 You can view his course here: https://www.datawithdanny.com/
 
 ## Table of Contents
