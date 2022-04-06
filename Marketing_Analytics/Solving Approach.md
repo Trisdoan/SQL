@@ -8,6 +8,11 @@ View the complete syntax [here](https://github.com/katiehuangx/8-Week-SQL-Challe
 
 
 ## Solution plan
+<details>
+<summary>
+Click here to view step-by-step plan
+</summary>
+  
 1. Creating complete dataset which joins essential tables.
 2. Calculate customer rental counts for each category.
 3. Calculate total films each customer watched.
@@ -26,31 +31,97 @@ View the complete syntax [here](https://github.com/katiehuangx/8-Week-SQL-Challe
 16. Create a table which contains recommended films with actor information
 17. Create final report for the marketing team.
 
+</details>
+  
+***
 
-### 1. What is the total amount each customer spent at the restaurant?
+### 1. Create complete dataset
 
 ````sql
-SELECT s.customer_id, SUM(price) AS total_sales
-FROM dbo.sales AS s
-JOIN dbo.menu AS m
-   ON s.product_id = m.product_id
-GROUP BY customer_id; 
+DROP TABLE IF EXISTS complete_data_table;
+CREATE TEMP TABLE complete_data_table  AS(
+    Select
+        A.customer_id,
+        A.rental_id,
+        A.rental_date,
+        E.name as category_name,
+        C.film_id,
+        C.title
+    From dvd_rentals.rental A 
+    INNER JOIN dvd_rentals.inventory B 
+        On A.inventory_id = B.inventory_id
+    INNER JOIN dvd_rentals.film C 
+        On B.film_id = C.film_id
+    INNER JOIN dvd_rentals.film_category D 
+        On C.film_id = D.film_id
+    INNER JOIN dvd_rentals.category E 
+        On D.category_id = E.category_id
+);
 ````
 
 #### Steps:
-- Use **SUM** and **GROUP BY** to find out ```total_sales``` contributed by each customer.
-- Use **JOIN** to merge ```sales``` and ```menu``` tables as ```customer_id``` and ```price``` are from both tables.
+- Use **INNER JOIN** to merge ```rental```, ```inventory``` ,```film```,```film_category```and```category```.
+- **INNER JOIN** and **LEFT JOIN** are them same. I did some tests to see whether there is a difference, which shows below.
 
-
-#### Answer:
+<details>
+<summary>
+Click here to view results
+</summary>
+   
 | customer_id | total_sales |
 | ----------- | ----------- |
 | A           | 76          |
-| B           | 74          |
-| C           | 36          |
 
-- Customer A spent $76.
-- Customer B spent $74.
-- Customer C spent $36.
+| customer_id | total_sales |
+| ----------- | ----------- |
+| A           | 76          |
+
+| customer_id | total_sales |
+| ----------- | ----------- |
+| A           | 76          |
+
+| customer_id | total_sales |
+| ----------- | ----------- |
+| A           | 76          |
+
+</details>
+
+
+### 2. Customer rental counts for each category
+
+````sql
+DROP TABLE IF EXISTS category_counts ;
+CREATE TEMP TABLE category_counts AS(
+    Select
+        customer_id,
+        category_name,
+        COUNT(*) as rental_count, 
+        -- for ranking purspose
+        MAX(rental_date) as latest_rental_date
+    From complete_data_table
+    GROUP BY 1,2
+);
+````
+
+#### Steps:
+- Use **Count** and **Group By** to answer how many film each customer watched per category.
+- Use **Max** to find the latest rented date per each customer. It will be useful in later step where ranking.
+
+
+### 3. Total films each customer watched
+
+````sql
+DROP TABLE IF EXISTS total_counts ;
+CREATE TEMP TABLE total_counts AS(
+    Select
+        customer_id,
+        SUM(rental_count) as total_count
+    From category_counts
+    GROUP BY 1
+);
+````
+
+#### Steps:
+- Use **Sum** and **Group By** to answer how many film each customer watched in total.
 
 ***
