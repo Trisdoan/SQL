@@ -202,4 +202,67 @@ CREATE TEMP TABLE top_category_percentile AS
           AND top_category_name = category_name;
 ````
 
+
+
+### 7. First top category insights table 
+
+#### Steps:
+- Use 
+
+````sql
+DROP TABLE IF EXISTS first_top_category_insights;
+CREATE TEMP TABLE first_top_category_insights AS(
+    Select
+        A.customer_id,
+        A.category_name,
+        A.rental_count,
+        A.rental_count - B.avg_category_count AS avg_comparision,
+        A.percentile
+    From top_category_percentile A 
+    LEFT JOIN average_category_count B 
+        On A.category_name = B.category_name
+);
+````
+
+### 8. Second top category insights table 
+
+#### Steps:
+- Use 
+
+````sql
+DROP TABLE IF EXISTS second_category_insights;
+CREATE TEMP TABLE second_category_insights AS(
+    Select
+        A.customer_id,
+        A.category_name,
+        A.rental_count,
+        ROUND(100* A.rental_count/B.total_count::NUMERIC) as percentage_difference
+    From top_categories A 
+    LEFT JOIN total_counts B 
+        On A.customer_id = B.customer_id
+    WHERE ranked_category = 2
+);
+````
+
+### 9. Summarised film count table 
+
+#### Steps:
+- Use 
+
+````sql
+DROP TABLE IF EXISTS film_counts ;
+CREATE TEMP TABLE film_counts AS (
+    Select DISTINCT
+        film_id,
+        title,
+        category_name,
+        COUNT(*) OVER(PARTITION BY film_id) AS rental_count
+    From complete_data_table
+);
+````
+
+
+
+
+
 ***
