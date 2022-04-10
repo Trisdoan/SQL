@@ -261,8 +261,206 @@ CREATE TEMP TABLE film_counts AS (
 );
 ````
 
+### 10. A previously watched film table
+
+#### Steps:
+- Use 
+
+````sql
+DROP TABLE IF EXISTS category_film_exclusions ;
+CREATE TEMP TABLE category_film_exclusions AS(
+    Select DISTINCT
+        film_id,
+        customer_id
+    FROM complete_data_table
+);
+````
+
+
+### 11. Perform an anti join from the relevant category films on the exclusions
+
+#### Steps:
+- Use 
+
+````sql
+DROP TABLE IF EXISTS category_recommendations;
+CREATE TEMP TABLE category_recommendations AS
+  With ranked_cte AS(
+    Select
+        A.customer_id,
+        A.category_name,
+        A.ranked_category,
+        B.film_id,
+        B.title,
+        B.rental_count,
+        DENSE_RANK() OVER(PARTITION  BY customer_id, ranked_category
+            ORDER BY B.rental_count DESC, B.title  
+        ) AS reco_rank
+    From top_categories A 
+    INNER JOIN film_counts B 
+        On A.category_name = B.category_name 
+    WHERE  NOT EXISTS (
+          Select 1
+          From category_film_exclusions C 
+          WHERE A.customer_id = C.customer_id
+              AND B.film_id = C.customer_id
+    )
+)
+Select 
+  *
+From ranked_cte
+WHERE reco_rank <=3;
+````
 
 
 
+### 12. A new base dataset which has a focus on the actor
 
+#### Steps:
+- Use 
+
+````sql
+DROP TABLE IF EXISTS actor_joint_table;
+CREATE TEMP TABLE actor_joint_table AS(
+    Select
+      A.customer_id,
+      A.rental_id,
+      A.rental_date,
+      C.film_id,
+      D.actor_id,
+      CONCAT(E.first_name, ' ', E.last_name) AS actor_name,
+      C.title
+    From
+      dvd_rentals.rental A
+      INNER JOIN dvd_rentals.inventory B 
+            On A.inventory_id = B.inventory_id
+      INNER JOIN dvd_rentals.film C 
+            On B.film_id = C.film_id
+      INNER JOIN dvd_rentals.film_actor D 
+            On C.film_id = D.film_id
+      INNER JOIN dvd_rentals.actor E 
+            On D.actor_id = E.actor_id
+);
+````
+
+
+### 13.  Identify the top actor and their respective rental film count
+
+#### Steps:
+- Use 
+
+````sql
+DROP TABLE IF EXISTS top_actor_counts;
+CREATE TEMP TABLE top_actor_counts AS
+ WITH actor_count AS(
+    SELECT
+      customer_id,
+      actor_id,
+      actor_name,
+      COUNT(*) AS rental_count
+    FROM
+      actor_joint_table
+    GROUP BY
+      customer_id,
+      actor_id,
+      actor_name
+  ),
+  ranked_actor AS (
+    Select
+      actor_count.*,
+      DENSE_RANK() OVER(
+        PARTITION BY customer_id
+        ORDER BY
+          rental_count DESC,
+          actor_name
+      ) AS rank_actor
+    FROM
+      actor_count
+)
+    Select
+        *
+    From ranked_actor
+    WHERE rank_actor = 1;
+````
+
+### 14. Generate total actor rental counts
+
+#### Steps:
+- Use 
+
+````sql
+DROP TABLE IF EXISTS actor_film_counts;
+CREATE TEMP TABLE actor_film_counts AS 
+  WITH film_count AS (
+    Select
+      film_id,
+      COUNT(DISTINCT rental_id) AS rental_count
+    FROM
+      actor_joint_table
+    GROUP BY
+      film_id
+)
+    Select DISTINCT
+        A.film_id,
+        A.actor_id,
+        A.title,
+        B.rental_count
+    From actor_joint_table A
+    LEFT JOIN film_count B 
+        On A.film_id = B.film_id;
+````
+
+### 15. An updated film exclusions table
+#### Steps:
+- Use 
+
+````sql
+DROP TABLE IF EXISTS actor_film_exclusions;
+CREATE TEMP TABLE actor_film_exclusions AS
+(
+    Select DISTINCT
+        customer_id,
+        film_id
+    From complete_data_table
+)
+UNION 
+(
+    Select DISTINCT
+        customer_id,
+        film_id
+    From category_recommendations
+);
+````
+
+### 16. Identify the 3 valid film recommendations
+#### Steps:
+- Use 
+
+````sql
+DROP TABLE IF EXISTS actor_recommendations ;
+CREATE TEMP TABLE actor_recommendations AS
+  WITH cte AS (
+    Select
+        A.customer_id,
+        A.actor_name,
+        A.rental_count,
+        B.title,
+        B.film_id,
+        B.actor_id,
+        DENSE_RANK() OVER(PARTITION BY A.customer_id ORDER BY B.rental_count DESC, B.title) as reco_rank
+    FROM top_actor_counts A 
+    INNER JOIN actor_film_counts B 
+       On A.actor_id = B.actor_id
+    WHERE NOT EXISTS (
+        Select 1
+        FROM actor_film_exclusions C 
+        WHERE 
+              A.customer_id = C.customer_id
+            AND 
+              B.film_id = C.film_id
+))
+    Select
+        *
+    FROM cte
+    WHERE reco_rank <=3;
 ***
