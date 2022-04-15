@@ -65,7 +65,25 @@ JOIN dannys_diner.menu B
 | A           | 76          |
 
 
-## 3. What is the most purchased item on the menu and how many times was it purchased by all customers?
+## 3. What was the first item from the menu purchased by each customer?
+
+### Steps:
+- Use
+
+````sql
+;
+````
+| customer_id | total_sales |
+| ----------- | ----------- |
+| A           | 76          |
+
+| customer_id | total_sales |
+| ----------- | ----------- |
+| A           | 76          |
+
+
+
+## 4. What is the most purchased item on the menu and how many times was it purchased by all customers?
 
 ### Steps:
 - Use
@@ -90,7 +108,7 @@ Limit 1;
 | A           | 76          |
 
 
-## 4. Which item was the most popular for each customer?
+## 5. Which item was the most popular for each customer?
 
 ### Steps:
 - Use
@@ -128,7 +146,7 @@ GROUP BY customer_id, A.product_id, product_name
 
 
 
-## 5. Which item was purchased first by the customer after they became a member?
+## 6. Which item was purchased first by the customer after they became a member?
 
 ### Steps:
 - Use
@@ -167,7 +185,7 @@ ORDER BY customer_id;
 
 
 
-## 6. Which item was purchased just before the customer became a member?
+## 7. Which item was purchased just before the customer became a member?
 ### Steps:
 - Use
 
@@ -204,7 +222,7 @@ ORDER BY customer_id;
 | A           | 76          |
 
 
-## 7. What is the number of unique menu items and total amount spent for each member before they became a member?
+## 8. What is the total items and amount spent for each member before they became a member?
 ### Steps:
 - Use
 
@@ -231,7 +249,7 @@ Group  by A.customer_id;
 
 
 
-## 8. If each $1 spent equates to 10 points and sushi has a 2x points multiplier. How many points would each customer have?
+## 9. If each $1 spent equates to 10 points and sushi has a 2x points multiplier. How many points would each customer have?
 ### Steps:
 - Use
 
@@ -257,7 +275,7 @@ Group by customer_id;
 
 
 
-## 9. In the first week after a customer joins the program(including their join date),they earn 2x points on all items. Not just sushi, how many points do customer A and B have at the end of January?
+## 10. In the first week after a customer joins the program(including their join date),they earn 2x points on all items. Not just sushi, how many points do customer A and B have at the end of January?
 ### Steps:
 - Use
 
@@ -289,7 +307,7 @@ ORDER BY customer_id:
 
     
     
- ## 10. QUESTION 11
+ ## 11. QUESTION 11
 ### Steps:
 - Use
 
@@ -320,7 +338,7 @@ Order by A.customer_id,
 | A           | 76          |
 
 
- ## 11. Danny also requires further information about the ranking of customer products, but he purposely does not need the ranking for non-member purchases so he expects null ranking values for the records when customers are not yet part of the loyalty program.
+ ## 12. Danny also requires further information about the ranking of customer products, but he purposely does not need the ranking for non-member purchases so he expects null ranking values for the records when customers are not yet part of the loyalty program.
 ### Steps:
 - Use
 
