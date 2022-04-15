@@ -1,7 +1,29 @@
-/* -------------------------------------------------
-Which film title was the most recommended for all customers?
----------------------------------------------------- */
+# Questions from marketing team
 
+
+## 1. Which film title was the most recommended for all customers?
+
+### Steps:
+- Use **INNER JOIN** to merge ```rental```, ```inventory``` ,```film```,```film_category```and```category```.
+- **INNER JOIN** and **LEFT JOIN** are them same. I did some tests to see whether there is a difference, which shows below.
+
+<details>
+<summary>
+Click here to view results
+</summary>
+   
+| customer_id | total_sales |
+| ----------- | ----------- |
+| A           | 76          |
+
+| customer_id | total_sales |
+| ----------- | ----------- |
+| A           | 76          |
+
+
+</details>
+
+````sql
 with cte as
 (Select 
     title
@@ -17,6 +39,12 @@ From actor_recommendations
   FROM cte
   GROUP BY title
 ORDER BY reco_count DESC;
+);
+````
+
+
+
+
 
 /* -------------------------------------------------
 How many customers were included in the email campaign?
