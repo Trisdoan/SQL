@@ -36,10 +36,6 @@ ORDER BY reco_count DESC;
 | A           | 76          |
 
 
-</details>
-
-
-
 
 /* -------------------------------------------------
 How many customers were included in the email campaign?
