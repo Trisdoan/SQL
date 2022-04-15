@@ -26,10 +26,6 @@ From actor_recommendations
 ORDER BY reco_count DESC;
 );
 ````
-<details>
-<summary>
-Click here to view results
-</summary>
    
 | customer_id | total_sales |
 | ----------- | ----------- |
