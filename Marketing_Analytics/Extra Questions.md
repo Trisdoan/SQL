@@ -23,13 +23,9 @@ From actor_recommendations
 ORDER BY reco_count DESC
 LIMIT 1;
 ````
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
-
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
+| title          | reco_count  |
+| ---------------| ----------- |
+|JUGGLER HARDLY  | 145         |
 
 
 
