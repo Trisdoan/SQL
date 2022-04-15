@@ -1,6 +1,6 @@
 # Explained approach
 
-View the complete syntax [here](https://github.com/Trisdoan/SQL_Marketing_Casestudy/blob/9a18e29f84e2589fa36ab38c4924b5f1291da7cc/Marketing_Analytics/code.sql).
+View the complete syntax [here](https://github.com/Trisdoan/SQL_Serious_SQL/blob/62f1110ec8346af7f1318840e84c00d9750b7316/Marketing_Analytics/code.sql).
 
 ***
 
