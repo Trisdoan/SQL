@@ -1,6 +1,5 @@
 # Questions from marketing team
 
-
 ## 1. Which film title was the most recommended for all customers?
 
 ### Steps:
@@ -25,7 +24,6 @@ From actor_recommendations
   GROUP BY title
 ORDER BY reco_count DESC;
 );
-````
    
 | customer_id | total_sales |
 | ----------- | ----------- |
@@ -34,8 +32,7 @@ ORDER BY reco_count DESC;
 | customer_id | total_sales |
 | ----------- | ----------- |
 | A           | 76          |
-
-
+````
 
 /* -------------------------------------------------
 How many customers were included in the email campaign?
