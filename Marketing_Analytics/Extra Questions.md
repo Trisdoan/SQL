@@ -6,7 +6,7 @@
 - Use 
 - 
 ````sql
-with cte as
+With cte as
 (Select 
     title
 From category_recommendations
@@ -20,8 +20,8 @@ From actor_recommendations
       COUNT( title) as reco_count
   FROM cte
   GROUP BY title
-ORDER BY reco_count DESC;
-);
+ORDER BY reco_count DESC
+LIMIT 1;
 ````
 | customer_id | total_sales |
 | ----------- | ----------- |
