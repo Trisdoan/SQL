@@ -6,7 +6,6 @@
 - Use **INNER JOIN** to merge ```rental```, ```inventory``` ,```film```,```film_category```and```category```.
 - **INNER JOIN** and **LEFT JOIN** are them same. I did some tests to see whether there is a difference, which shows below.
 
-
 ````sql
 with cte as
 (Select 
@@ -24,7 +23,7 @@ From actor_recommendations
   GROUP BY title
 ORDER BY reco_count DESC;
 );
-   
+````
 | customer_id | total_sales |
 | ----------- | ----------- |
 | A           | 76          |
@@ -34,13 +33,31 @@ ORDER BY reco_count DESC;
 | A           | 76          |
 ````
 
-/* -------------------------------------------------
-How many customers were included in the email campaign?
----------------------------------------------------- */
+## 2. How many customers were included in the email campaign?
 
+### Steps:
+- Use **INNER JOIN** to merge ```rental```, ```inventory``` ,```film```,```film_category```and```category```.
+- **INNER JOIN** and **LEFT JOIN** are them same. I did some tests to see whether there is a difference, which shows below.
+
+
+````sql
 SELECT
     COUNT(DISTINCT customer_id)
 FROM report_table;
+````
+| customer_id | total_sales |
+| ----------- | ----------- |
+| A           | 76          |
+
+| customer_id | total_sales |
+| ----------- | ----------- |
+| A           | 76          |
+````
+
+
+
+
+
 
 /* -------------------------------------------------
 Out of all the possible films - what percentage coverage do we have in 
