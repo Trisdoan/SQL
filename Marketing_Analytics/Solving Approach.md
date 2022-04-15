@@ -4,9 +4,6 @@ View the complete syntax [here](https://github.com/Trisdoan/SQL_Marketing_Casest
 
 ***
 
-## How to come up with solution plan
-
-
 ## Solution plan
 <details>
 <summary>
