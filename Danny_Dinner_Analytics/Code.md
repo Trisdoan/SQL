@@ -39,8 +39,22 @@ From dannys_diner.sales
 Group by customer_id 
 Order by days  DESC;
 
--- What was the first item from the menu purchased by each customer?
+````
+| customer_id | total_sales |
+| ----------- | ----------- |
+| A           | 76          |
 
+| customer_id | total_sales |
+| ----------- | ----------- |
+| A           | 76          |
+
+
+## 3. What was the first item from the menu purchased by each customer?
+
+### Steps:
+- Use
+
+````sql
 With ranked_order AS (
 Select
     customer_id,
@@ -63,24 +77,6 @@ JOIN dannys_diner.menu B
 | customer_id | total_sales |
 | ----------- | ----------- |
 | A           | 76          |
-
-
-## 3. What was the first item from the menu purchased by each customer?
-
-### Steps:
-- Use
-
-````sql
-;
-````
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
-
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
-
 
 
 ## 4. What is the most purchased item on the menu and how many times was it purchased by all customers?
@@ -305,40 +301,8 @@ ORDER BY customer_id:
 | ----------- | ----------- |
 | A           | 76          |
 
-    
-    
- ## 11. QUESTION 11
-### Steps:
-- Use
 
-````sql
-Select
-    A.customer_id,
-    A.order_date,
-    B.product_name,
-    B.price,
-    Case
-      When A.order_date >= C.join_date then 'YES'
-      ELSE 'NO'
-    END AS member
-From dannys_diner.sales A 
-JOIN dannys_diner.menu B 
-    On A.product_id = B.product_id
-LEFT JOIN dannys_diner.members C 
-    On A.customer_id = C.customer_id
-Order by A.customer_id,
-         A.order_date
-````
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
-
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
-
-
- ## 12. Danny also requires further information about the ranking of customer products, but he purposely does not need the ranking for non-member purchases so he expects null ranking values for the records when customers are not yet part of the loyalty program.
+ ## 11. Danny also requires further information about the ranking of customer products, but he purposely does not need the ranking for non-member purchases so he expects null ranking values for the records when customers are not yet part of the loyalty program.
 ### Steps:
 - Use
 
@@ -359,7 +323,8 @@ JOIN dannys_diner.menu B
     On A.product_id = B.product_id
 LEFT JOIN dannys_diner.members C 
     On A.customer_id = C.customer_id
-Order by 1, 2
+Order by A.customer_id,
+         A.order_date
 );
 
 Select 
