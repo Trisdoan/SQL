@@ -6,6 +6,7 @@ You can view his course here: https://www.datawithdanny.com/
 ## Table of Contents
 - [Case Study Overview](#case-study-overview)
 - [Requirements](#requirements)
+- [My task](#my-task)
 - [Entity Relationship Diagram](#entity-relationship-diagram)
 - [Solving problem and code](#solving-problem-and-code)
 - [Extra questions from marketing team](https://github.com/Trisdoan/SQL_Serious_SQL/blob/7f026c43fe1e04aaefe30c4c4019ecebb811a3e6/Marketing_Analytics/Extra%20Questions.md)
