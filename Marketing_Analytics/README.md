@@ -42,7 +42,7 @@ Click the link to see my code!
 </summary>
   
 1. [Approach to solve problem](https://github.com/Trisdoan/SQL_Serious_SQL/blob/2fc59be06797238dee17a76d744a4aa4ba6bcf8a/Marketing_Analytics/Solving%20Approach.md)
-2. [Code](https://github.com/Trisdoan/SQL/blob/95ed34a91f105caac63dda2b372fe0c1079c2dec/Marketing_Analytics/code.sql)
+2. [Code](https://github.com/Trisdoan/SQL_Serious_SQL/blob/2fc59be06797238dee17a76d744a4aa4ba6bcf8a/Marketing_Analytics/code.sql)
 
 </details>
   
