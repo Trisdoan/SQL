@@ -36,30 +36,7 @@ Click here to view step-by-step plan
 
 #### Steps:
 - Use **INNER JOIN** to merge ```rental```, ```inventory``` ,```film```,```film_category```and```category```.
-- **INNER JOIN** and **LEFT JOIN** are them same. I did some tests to see whether there is a difference, which shows below.
-
-<details>
-<summary>
-Click here to view results
-</summary>
-   
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
-
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
-
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
-
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
-
-</details>
+- **INNER JOIN** and **LEFT JOIN** are them same. I did some tests to see whether there is a difference.
 
 ````sql
 DROP TABLE IF EXISTS complete_data_table;
