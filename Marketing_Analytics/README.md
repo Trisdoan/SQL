@@ -33,6 +33,9 @@ The marketing team have shared with us a draft of the email they wish to send to
   - What proportion of each customer’s total films watched does this count make?
 5. Along with the top 2 categories, marketing has also requested top actor film recommendations where up to 3 more films are included in the recommendations list as well as the count of films by the top actor.
 
+## My task
+Imagine that I am a fresher data analyst of the team. My supervisor, who is experience data leader(Mr. Danny), gave a solution plan. I will follow that plan to solve the problem 
+
 ## Entity Relationship Diagram
 ![ERD](https://user-images.githubusercontent.com/88806544/161838741-8d4b8abe-5c74-4658-9fc9-ace1a7ead26b.png)
 
