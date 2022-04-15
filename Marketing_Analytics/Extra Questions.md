@@ -3,9 +3,8 @@
 ## 1. Which film title was the most recommended for all customers?
 
 ### Steps:
-- Use **INNER JOIN** to merge ```rental```, ```inventory``` ,```film```,```film_category```and```category```.
-- **INNER JOIN** and **LEFT JOIN** are them same. I did some tests to see whether there is a difference, which shows below.
-
+- Use 
+- 
 ````sql
 with cte as
 (Select 
@@ -37,8 +36,7 @@ ORDER BY reco_count DESC;
 ## 2. How many customers were included in the email campaign?
 
 ### Steps:
-- Use **INNER JOIN** to merge ```rental```, ```inventory``` ,```film```,```film_category```and```category```.
-- **INNER JOIN** and **LEFT JOIN** are them same. I did some tests to see whether there is a difference, which shows below.
+- Use 
 
 
 ````sql
@@ -53,17 +51,13 @@ FROM report_table;
 | customer_id | total_sales |
 | ----------- | ----------- |
 | A           | 76          |
-````
 
+## 3. Out of all the possible films - what percentage coverage do we have in our recommendations?
 
+### Steps:
+- Use
 
-
-
-
-/* -------------------------------------------------
-Out of all the possible films - what percentage coverage do we have in 
-our recommendations? (total unique films recommended divided by total available films)
----------------------------------------------------- */
+````sql
 
 with cte as
 (Select 
@@ -80,22 +74,47 @@ From actor_recommendations
       ROUND( Count(distinct A.title)::NUMERIC/Count(distinct B.title)::NUMERIC,5) as coverager
   From cte A 
   CROSS JOIN dvd_rentals.film B;
+````
+| customer_id | total_sales |
+| ----------- | ----------- |
+| A           | 76          |
 
-/* -------------------------------------------------
-What is the most popular top category?
----------------------------------------------------- */
+| customer_id | total_sales |
+| ----------- | ----------- |
+| A           | 76          |
 
+
+
+## 4. What is the most popular top category?
+
+### Steps:
+- Use
+
+````sql
 Select
     category_name,
     COUNT(*) as count_cate
 FROM first_top_category_insights
 GROUP BY category_name
 ORDER BY count_cate DESC;
+````
+| customer_id | total_sales |
+| ----------- | ----------- |
+| A           | 76          |
 
-/* -------------------------------------------------
-What is the 4th most popular top category?
----------------------------------------------------- */
+| customer_id | total_sales |
+| ----------- | ----------- |
+| A           | 76          |
 
+
+
+
+## 5. What is the 4th most popular top category?
+
+### Steps:
+- Use
+
+````sql
 WITH cte AS
 (
 Select
@@ -109,23 +128,40 @@ GROUP BY 1
       category_name
   From cte
   where ranked = 4;
+````
+| customer_id | total_sales |
+| ----------- | ----------- |
+| A           | 76          |
 
-/* -------------------------------------------------
-What is the average percentile ranking for each customer in their top category rounded to the nearest
-2 decimal places? Hint: be careful of your data types!
----------------------------------------------------- */
+| customer_id | total_sales |
+| ----------- | ----------- |
+| A           | 76          |
 
+
+
+## 6. What is the average percentile ranking for each customer in their top category
+### Steps:
+- Use
+
+````sql
 Select
     round(avg(percentile)::NUMERIC,3)
-From first_top_category_insights
+From first_top_category_insights;
+````
+| customer_id | total_sales |
+| ----------- | ----------- |
+| A           | 76          |
+
+| customer_id | total_sales |
+| ----------- | ----------- |
+| A           | 76          |
 
 
-/* -------------------------------------------------
-What is the cumulative distribution of the top 5 percentile values for the top category 
-from the first_category_insights table rounded to the nearest round percentage?
-- 5% below 5th percentile
----------------------------------------------------- */
+## 7. What is the cumulative distribution of the top 5 percentile values for the top category from the first_category_insights table
+### Steps:
+- Use
 
+````sql
 SELECT
   ROUND(percentile) as percentile,
   COUNT(*),
@@ -133,40 +169,79 @@ SELECT
 FROM first_top_category_insights
 GROUP BY 1
 ORDER BY 1;
+````
+| customer_id | total_sales |
+| ----------- | ----------- |
+| A           | 76          |
+
+| customer_id | total_sales |
+| ----------- | ----------- |
+| A           | 76          |
 
 
-/* -------------------------------------------------
-What is the median of the second category percentage of entire viewing history?
----------------------------------------------------- */
+
+## 8. What is the median of the second category percentage of entire viewing history?
+### Steps:
+- Use
+
+````sql
 
 Select 
   percentile_cont(0.5) within Group(order by percentage_difference) as median
-from second_category_insights
+from second_category_insights;
+````
+| customer_id | total_sales |
+| ----------- | ----------- |
+| A           | 76          |
 
-/* -------------------------------------------------
-What is the 80th percentile of films watched featuring each customer’s favourite actor?
----------------------------------------------------- */
+| customer_id | total_sales |
+| ----------- | ----------- |
+| A           | 76          |
 
+
+
+## 9. What is the 80th percentile of films watched featuring each customer’s favourite actor?
+### Steps:
+- Use
+
+````sql
 SELECT 
  PERCENTILE_CONT(0.8) within Group(order by rental_count) as 8th_percentile
-FROM top_actor_counts
+FROM top_actor_counts;
+````
+| customer_id | total_sales |
+| ----------- | ----------- |
+| A           | 76          |
+
+| customer_id | total_sales |
+| ----------- | ----------- |
+| A           | 76          |
 
     
-/* -------------------------------------------------
-What was the average number of films watched by each customer
-rounded to the nearest whole number?
----------------------------------------------------- */
+    
+ ## 10. What was the average number of films watched by each customer
+### Steps:
+- Use
 
+````sql
 SELECT
     round(AVG(total_count))
-From total_counts
+From total_counts;
+````
+| customer_id | total_sales |
+| ----------- | ----------- |
+| A           | 76          |
 
-/* -------------------------------------------------
-What is the top combination of top 2 categories and how many customers 
-if the order is relevant (e.g. Horror and Drama is a different combination to Drama and Horror)
--> meaning: Find two category which have highest number of customer
----------------------------------------------------- */
+| customer_id | total_sales |
+| ----------- | ----------- |
+| A           | 76          |
 
+
+ ## 11. What is the top combination of top 2 categories and how many customers if the order is relevant
+### Steps:
+- Use
+
+````sql
 Select  
     cat_1,
     cat_2,
@@ -174,24 +249,43 @@ Select
 FROM report_table
 GROUP BY cat_1,
          cat_2
-ORDER BY number_of_customer DESC 
-limit 5
+ORDER BY number_of_customer DESC
+LIMIT 1;
+````
+| customer_id | total_sales |
+| ----------- | ----------- |
+| A           | 76          |
 
-/* -------------------------------------------------
-Which actor was the most popular for all customers?
----------------------------------------------------- */
+
+ ## 12. Which actor was the most popular for all customers?
+### Steps:
+- Use
+
+````sql
 SELECT 
     actor_name,
     COUNT(*) as occurence
 FROM report_table
 GROUP BY actor_name 
 ORDER BY occurence DESC 
-LIMIT 4
+LIMIT 1;
+````
+| customer_id | total_sales |
+| ----------- | ----------- |
+| A           | 76          |
 
-/* -------------------------------------------------
-How many films on average had customers already seen that feature their favourite actor rounded to closest integer?
----------------------------------------------------- */
 
+
+ ## 13. How many films on average had customers already seen that feature their favourite actor
+### Steps:
+- Use
+
+````sql
 Select
     ROUND(AVG(rental_count))
-FROM top_actor_counts
+FROM top_actor_counts;
+````
+| customer_id | total_sales |
+| ----------- | ----------- |
+| A           | 76          |
+
