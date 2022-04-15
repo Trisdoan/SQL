@@ -46,7 +46,7 @@ Imagine that I am a fresher data analyst of the team. My supervisor, who is expe
 Click the link to see my code!
 </summary>
   
-1. [Approach to solve problem](https://github.com/Trisdoan/SQL_Serious_SQL/blob/2fc59be06797238dee17a76d744a4aa4ba6bcf8a/Marketing_Analytics/Solving%20Approach.md)
+1. [Approach to solve problem](https://github.com/Trisdoan/SQL_Serious_SQL/blob/41822fa526e594aa1bcf8a3cdae0818650829327/Marketing_Analytics/Solving%20Approach.md)
 2. [Code](https://github.com/Trisdoan/SQL_Serious_SQL/blob/2fc59be06797238dee17a76d744a4aa4ba6bcf8a/Marketing_Analytics/code.sql)
 
 </details>
