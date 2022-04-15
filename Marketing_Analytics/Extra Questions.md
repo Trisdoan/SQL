@@ -37,16 +37,13 @@ LIMIT 1;
 
 ````sql
 SELECT
-    COUNT(DISTINCT customer_id)
+    COUNT(DISTINCT customer_id) as count_customers
 FROM report_table;
 ````
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
+| count_customers |
+| ----------------| 
+| 599             |
 
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
 
 ## 3. Out of all the possible films - what percentage coverage do we have in our recommendations?
 
@@ -67,17 +64,16 @@ From actor_recommendations
   Select  
       Count(distinct A.title) as film_reco,
       Count(distinct B.title) as film_total,
-      ROUND( Count(distinct A.title)::NUMERIC/Count(distinct B.title)::NUMERIC,5) as coverager
+      ROUND( Count(distinct A.title)::NUMERIC/Count(distinct B.title)::NUMERIC,5) as coverage
   From cte A 
   CROSS JOIN dvd_rentals.film B;
 ````
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
+| film_reco   | film_total  | coverage   |
+| ----------- | ----------- |----------- |
+| 250         | 1000        |0.25000     |
 
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
+
+
 
 
 
@@ -89,18 +85,16 @@ From actor_recommendations
 ````sql
 Select
     category_name,
-    COUNT(*) as count_cate
+    COUNT(*) as count_category
 FROM first_top_category_insights
 GROUP BY category_name
-ORDER BY count_cate DESC;
+ORDER BY count_cate DESC
+LIMIT 1;
 ````
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
+| category_name | count_category |
+| --------------| -------------- |
+| Animation     | 63             |
 
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
 
 
 
@@ -125,13 +119,10 @@ GROUP BY 1
   From cte
   where ranked = 4;
 ````
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
+| category_name |
+| --------------| 
+| Documentary   |
 
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
 
 
 
@@ -141,16 +132,14 @@ GROUP BY 1
 
 ````sql
 Select
-    round(avg(percentile)::NUMERIC,3)
+    round(avg(percentile)::NUMERIC,3) as avg_percentile
 From first_top_category_insights;
 ````
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
+| avg_percentile |
+| -------------- |
+| 5.232          |
 
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
+
 
 
 ## 7. What is the cumulative distribution of the top 5 percentile values for the top category from the first_category_insights table
@@ -160,19 +149,19 @@ From first_top_category_insights;
 ````sql
 SELECT
   ROUND(percentile) as percentile,
-  COUNT(*),
   ROUND(100*CUME_DIST() OVER(ORDER BY ROUND(percentile))) AS cum_dist
 FROM first_top_category_insights
 GROUP BY 1
-ORDER BY 1;
+ORDER BY 1
+LIMIT 5;
 ````
-| customer_id | total_sales |
+| percentile  | cum_dist    |
 | ----------- | ----------- |
-| A           | 76          |
-
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
+| 1           | 5           |
+| 2           | 9           |
+| 3           | 14          |
+| 4           | 18          |
+| 5           | 23          |
 
 
 
@@ -181,18 +170,13 @@ ORDER BY 1;
 - Use
 
 ````sql
-
 Select 
   percentile_cont(0.5) within Group(order by percentage_difference) as median
 from second_category_insights;
 ````
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
-
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
+| median      |       
+| ----------- | 
+| 13           | 
 
 
 
@@ -202,16 +186,13 @@ from second_category_insights;
 
 ````sql
 SELECT 
- PERCENTILE_CONT(0.8) within Group(order by rental_count) as 8th_percentile
+ PERCENTILE_CONT(0.8) within Group(order by rental_count) as eighth_rental_count
 FROM top_actor_counts;
 ````
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
+| eighth_rental_count | 
+| ------------------- | 
+| 5                   |
 
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
 
     
     
@@ -221,16 +202,12 @@ FROM top_actor_counts;
 
 ````sql
 SELECT
-    round(AVG(total_count))
+    round(AVG(total_count)) as avg_num_film
 From total_counts;
 ````
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
-
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
+| avg_num_film |
+| ------------ |
+| 27           | 
 
 
  ## 11. What is the top combination of top 2 categories and how many customers if the order is relevant
@@ -248,9 +225,9 @@ GROUP BY cat_1,
 ORDER BY number_of_customer DESC
 LIMIT 1;
 ````
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
+|cat_1        | cat_2       | number_of_customer   |
+| ----------- | ----------- |--------------------- |
+| Animation   | Sci-Fi      |8                     |
 
 
  ## 12. Which actor was the most popular for all customers?
@@ -266,9 +243,9 @@ GROUP BY actor_name
 ORDER BY occurence DESC 
 LIMIT 1;
 ````
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
+| actor_name      | occurence |
+| --------------- | ----------|
+| GINA DEGENERES  | 19        |
 
 
 
@@ -278,10 +255,10 @@ LIMIT 1;
 
 ````sql
 Select
-    ROUND(AVG(rental_count))
+    ROUND(AVG(rental_count)) as avg_film
 FROM top_actor_counts;
 ````
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
+| avg_film    | 
+| ----------- | 
+| 4           | 
 
