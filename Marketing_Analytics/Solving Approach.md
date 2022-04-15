@@ -168,7 +168,8 @@ CREATE TEMP TABLE average_category_count AS(
 ### 6. Average rental count per category
 
 #### Steps:
-- Use 
+- Use **PERCENT_RANK()** to calculate relative rank of each row's percentile
+- Usse **CASE WHEN** to transform 0 percentile into 1 percentile
 
 ````sql
 DROP TABLE IF EXISTS top_category_percentile;
@@ -207,7 +208,7 @@ CREATE TEMP TABLE top_category_percentile AS
 ### 7. First top category insights table 
 
 #### Steps:
-- Use 
+- Purpose of this table: create a table for top 1 category, which will be used later.
 
 ````sql
 DROP TABLE IF EXISTS first_top_category_insights;
@@ -227,7 +228,7 @@ CREATE TEMP TABLE first_top_category_insights AS(
 ### 8. Second top category insights table 
 
 #### Steps:
-- Use 
+- Purpose of this table: create a table for top 2 category, which will be used later.
 
 ````sql
 DROP TABLE IF EXISTS second_category_insights;
@@ -246,8 +247,6 @@ CREATE TEMP TABLE second_category_insights AS(
 
 ### 9. Summarised film count table 
 
-#### Steps:
-- Use 
 
 ````sql
 DROP TABLE IF EXISTS film_counts ;
@@ -263,8 +262,6 @@ CREATE TEMP TABLE film_counts AS (
 
 ### 10. A previously watched film table
 
-#### Steps:
-- Use 
 
 ````sql
 DROP TABLE IF EXISTS category_film_exclusions ;
@@ -280,7 +277,8 @@ CREATE TEMP TABLE category_film_exclusions AS(
 ### 11. Perform an anti join from the relevant category films on the exclusions
 
 #### Steps:
-- Use 
+- Use **CTE** and **DENSE_RANK()** to rank recommendation film
+- Use **ANTI JOIN** to exclude films which is alread watched
 
 ````sql
 DROP TABLE IF EXISTS category_recommendations;
@@ -316,8 +314,6 @@ WHERE reco_rank <=3;
 
 ### 12. A new base dataset which has a focus on the actor
 
-#### Steps:
-- Use 
 
 ````sql
 DROP TABLE IF EXISTS actor_joint_table;
@@ -347,7 +343,7 @@ CREATE TEMP TABLE actor_joint_table AS(
 ### 13.  Identify the top actor and their respective rental film count
 
 #### Steps:
-- Use 
+- Use **CTE** to count number of actors and rank actor based on numbers of film count
 
 ````sql
 DROP TABLE IF EXISTS top_actor_counts;
@@ -386,7 +382,7 @@ CREATE TEMP TABLE top_actor_counts AS
 ### 14. Generate total actor rental counts
 
 #### Steps:
-- Use 
+- Use **CTE** to count number of unique films
 
 ````sql
 DROP TABLE IF EXISTS actor_film_counts;
@@ -412,7 +408,7 @@ CREATE TEMP TABLE actor_film_counts AS
 
 ### 15. An updated film exclusions table
 #### Steps:
-- Use 
+- Use **UNION** to merge available films in total and films which are already recommended
 
 ````sql
 DROP TABLE IF EXISTS actor_film_exclusions;
@@ -434,7 +430,8 @@ UNION
 
 ### 16. Identify the 3 valid film recommendations
 #### Steps:
-- Use 
+- Use **CTE** and **DENSE_RANK()** to rank recommended films featuring favorite actors
+- Use **ANTI JOIN** to exclude films which are already recommeneded and not rented
 
 ````sql
 DROP TABLE IF EXISTS actor_recommendations ;
@@ -463,4 +460,90 @@ CREATE TEMP TABLE actor_recommendations AS
         *
     FROM cte
     WHERE reco_rank <=3;
+````
+   
+    
+### 17. Final Report
+#### Steps:
+- Use **CTE** to merge all insight table
+- Use **CONCAT** to create insight in string 
+
+````sql
+DROP TABLE IF EXISTS report_table;
+CREATE TEMP TABLE report_table AS
+  WITH first_category_insight AS(
+    Select
+      customer_id,
+      category_name,
+      CONCAT('You ','ve watched ' , rental_count,' ', category_name, ' film, 
+      that''s ', avg_comparision, ' more than the DVD Rental Co average and puts you in the top ', percentile, '% of ', category_name ) as insight
+    From first_top_category_insights
+),
+   second_category_insight AS(
+      Select 
+        customer_id,
+        category_name,
+        CONCAT('You ','ve watched ' , rental_count,' ', category_name, ' films,', 
+      ' making up ',percentage_difference ,'% of your entire viewing history' ) as insight
+      From second_category_insights
+),
+  top_actor AS (
+      Select
+          customer_id,
+          actor_name,
+          CONCAT('You''ve watched ', rental_count, ' films featuring ', actor_name, '. Here are some other films ', actor_name, 'stars in that might interest you!' ) as insight
+      From top_actor_counts
+),
+    total_category_recommendations AS (
+      Select
+          customer_id,
+          MAX(CASE WHEN ranked_category = 1 AND reco_rank =  1 THEN title END ) AS cat_1_reco_1,
+          MAX(CASE WHEN ranked_category = 1 AND reco_rank =  2 THEN title END ) AS cat_1_reco_2,
+          MAX(CASE WHEN ranked_category = 1 AND reco_rank =  3 THEN title END ) AS cat_1_reco_3,
+          MAX(CASE WHEN ranked_category = 2 AND reco_rank =  1 THEN title END ) AS cat_2_reco_1,
+          MAX(CASE WHEN ranked_category = 2 AND reco_rank =  2 THEN title END ) AS cat_2_reco_2,
+          MAX(CASE WHEN ranked_category = 2 AND reco_rank =  3 THEN title END ) AS cat_2_reco_3
+      From category_recommendations 
+      GROUP BY customer_id
+),
+    total_actor_recommendations AS (
+      Select
+        customer_id,
+        MAX(CASE WHEN reco_rank =  1 THEN title END ) AS actor_reco_1,
+        MAX(CASE WHEN reco_rank =  2 THEN title END ) AS actor_reco_2,
+        MAX(CASE WHEN reco_rank =  3 THEN title END ) AS actor_reco_3
+      From actor_recommendations
+      GROUP BY customer_id
+),
+    final_output AS (
+      SELECT
+          A.customer_id,
+          C.category_name as cat_1,
+          A.cat_1_reco_1,
+          A.cat_1_reco_2,
+          A.cat_1_reco_3,
+          D.category_name as cat_2,
+          A.cat_2_reco_1,
+          A.cat_2_reco_2,
+          A.cat_2_reco_3,
+          E.actor_name,
+          B.actor_reco_1,
+          B.actor_reco_2,
+          B.actor_reco_3,
+          C.insight AS insight_1,
+          D.insight AS insight_2,
+          E.insight AS insight_actor
+      FROM total_category_recommendations A 
+      INNER JOIN total_actor_recommendations B 
+        ON A.customer_id = B.customer_id
+      INNER JOIN first_category_insight C
+        ON A.customer_id = C.customer_id
+      INNER JOIN second_category_insight D 
+        ON A.customer_id = D.customer_id
+      INNER JOIN top_actor E 
+        ON A.customer_id = E.customer_id
+)
+    Select *
+    FROM final_output;
+````
 ***
