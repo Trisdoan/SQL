@@ -41,7 +41,7 @@ The marketing team have shared with us a draft of the email they wish to send to
 Click the link to see my code!
 </summary>
   
-1. [Approach to solve problem](https://github.com/Trisdoan/SQL/blob/3c28e69002be13a472f206a52342310f77bdc322/Marketing_Analytics/Solving%20Approach.md)
+1. [Approach to solve problem](https://github.com/Trisdoan/SQL_Serious_SQL/blob/2fc59be06797238dee17a76d744a4aa4ba6bcf8a/Marketing_Analytics/Solving%20Approach.md)
 2. [Code](https://github.com/Trisdoan/SQL/blob/95ed34a91f105caac63dda2b372fe0c1079c2dec/Marketing_Analytics/code.sql)
 
 </details>
