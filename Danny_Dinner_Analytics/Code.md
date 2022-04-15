@@ -18,10 +18,8 @@ Order by total_sales DESC;
 | customer_id | total_sales |
 | ----------- | ----------- |
 | A           | 76          |
-
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
+| B           | 74          |
+| C           | 36          |
 
 
 
