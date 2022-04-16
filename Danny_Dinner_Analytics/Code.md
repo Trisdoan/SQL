@@ -38,13 +38,12 @@ Group by customer_id
 Order by days  DESC;
 
 ````
-| customer_id | total_sales |
+| customer_id | days        |
 | ----------- | ----------- |
-| A           | 76          |
+| B           | 6           |
+| A           | 4           |
+| C           | 2           |
 
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
 
 
 ## 3. What was the first item from the menu purchased by each customer?
@@ -68,13 +67,14 @@ JOIN dannys_diner.menu B
   From ranked_order
   Where order_rank = 1;
 ````
-| customer_id | total_sales |
+| customer_id | product_name|
 | ----------- | ----------- |
-| A           | 76          |
+| A           | curry       |
+| A           | sushi       |
+| B           | curry       |
+| C           | ramen       |
 
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
+
 
 
 ## 4. What is the most purchased item on the menu and how many times was it purchased by all customers?
@@ -93,13 +93,11 @@ GROUP BY A.product_id, product_name
 ORDER BY count_sales Desc
 Limit 1;
 ````
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
+| product_name | count_sales |
+| ------------ | ----------- |
+| ramen        | 8           |
 
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
+
 
 
 ## 5. Which item was the most popular for each customer?
@@ -129,13 +127,14 @@ GROUP BY customer_id, A.product_id, product_name
   WHERE sales_rank = 1
   Order by customer_id;
 ````
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
+| customer_id | product_name | count_sales |
+| ----------- | ------------ | ----------- |
+| A           | ramen        |3            |
+| B           | sushi        |2            |
+| B           | ramen        |2            |
+| B           | curry        |2            |
+| C           | ramen        |3            |
 
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
 
 
 
@@ -169,13 +168,12 @@ LEFT JOIN dannys_diner.menu B
 Where day_rank = 1
 ORDER BY customer_id;
 ````
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
+| customer_id | order_date  |product_name |
+| ----------- | ----------- |-----------  |
+| A           | 2021-01-07  |curry        |
+| B           | 2021-01-11  |sushi        |
 
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
+
 
 
 
