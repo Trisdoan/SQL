@@ -205,13 +205,11 @@ LEFT JOIN dannys_diner.menu B
 Where day_rank = 1
 ORDER BY customer_id;
 ````
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
-
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
+| customer_id | order_date  |product_name |
+| ----------- | ----------- |-----------  |
+| A           | 2021-01-01  |sushi        |
+| A           | 2021-01-01  |curry        |
+| B           | 2021-01-04  |sushi        |
 
 
 ## 8. What is the total items and amount spent for each member before they became a member?
@@ -231,13 +229,10 @@ LEFT JOIN dannys_diner.members C
 Where  A.order_date < C.join_date
 Group  by A.customer_id;
 ````
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
-
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
+| customer_id | total_unique_product|total_price  |
+| ----------- | ------------------- |-----------  |
+| A           | 2                   |25           |
+| A           | 2                   |40           | 
 
 
 
@@ -257,13 +252,11 @@ LEFT JOIN dannys_diner.menu B
     ON A.product_id = B.product_id
 Group by customer_id;
 ````
-| customer_id | total_sales |
+| customer_id | total_point |
 | ----------- | ----------- |
-| A           | 76          |
-
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
+| B           | 940         |
+| C           | 360         |
+| A           | 860         |
 
 
 
@@ -287,15 +280,12 @@ Join dannys_diner.members C
     On A.customer_id = C.customer_id
 WHERE order_date <= '2021-01-31'::DATE
 Group by A.customer_id
-ORDER BY customer_id:
+ORDER BY customer_id;
 ````
-| customer_id | total_sales |
+| customer_id | total_point |
 | ----------- | ----------- |
-| A           | 76          |
-
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
+| A           | 1370        |
+| B           | 940         |
 
 
  ## 11. Danny also requires further information about the ranking of customer products, but he purposely does not need the ranking for non-member purchases so he expects null ranking values for the records when customers are not yet part of the loyalty program.
@@ -329,8 +319,10 @@ Select
       WHEN member = 'NO' then null
       ELSE DENSE_RANK() OVER(PARTITION BY customer_id, member ORDER BY order_date)
     END AS ranking
-From  all_info;
+From  all_info
+LIMIT 2;
 ````
-| customer_id | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
+| customer_id | order_date  | product_name | price | member | ranking |
+| ----------- | ----------- | -----------  | ----- | ------ |-------- |
+| A           | 2021-01-01  |sushi         |10     |NO      |null     |
+| A           | 2021-01-01  |curry         |15     |NO      |null     |
