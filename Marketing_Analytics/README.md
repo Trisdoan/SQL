@@ -3,53 +3,8 @@ CREDIT: Danny Ma.
 
 You can view his course here: https://www.datawithdanny.com/
 
-## Table of Contents
-- [Case Study Overview](#case-study-overview)
-- [Requirements](#requirements)
-- [My task](#my-task)
-- [Entity Relationship Diagram](#entity-relationship-diagram)
-- [Solving problem and code](#solving-problem-and-code)
-- [Extra questions from marketing team](https://github.com/Trisdoan/SQL_Serious_SQL/blob/7f026c43fe1e04aaefe30c4c4019ecebb811a3e6/Marketing_Analytics/Extra%20Questions.md)
 
-***
+## Project Overview
+Customer analytics team at DVD Rental Co who have been tasked with generating the necessary data points required to populate specific parts of this first-ever customer email campaign. Imagine that I am a fresher data analyst of the team. My supervisor, who is experience data leader(Mr. Danny), gave a solution plan. I will follow that plan to solve the problem.
 
-## Case Study Overview
-We have been asked to support the customer analytics team at DVD Rental Co who have been tasked with generating the necessary data points required to populate specific parts of this first-ever customer email campaign.
-
-The marketing team have shared with us a draft of the email they wish to send to their customers.
-
-![marketing](https://user-images.githubusercontent.com/88806544/161837109-bb4b26a0-353e-4f2b-815f-7e85dfbd5ed0.png)
-
-
-## Requirements
-
-1. For each customer, we need to identify the top 2 categories for each customer based off their past rental history. These top categories will drive marketing creative images as seen in the travel and sci-fi examples in the draft email.
-2. The marketing team has also requested for the 3 most popular films for each customer’s top 2 categories. Any customer which do not have any film recommendations for either category must be flagged out so the marketing team can exclude from the email campaign - this is of high importance!
-3. For the 1st category, the marketing requires the following insights:
-  - How many total films have they watched in their top category?
-  - How many more films has the customer watched compared to the average DVD Rental Co customer?
-  - How does the customer rank in terms of the top X% compared to all other customers in this film category?
-4. For the second ranking category:
-  - How many total films has the customer watched in this category?
-  - What proportion of each customer’s total films watched does this count make?
-5. Along with the top 2 categories, marketing has also requested top actor film recommendations where up to 3 more films are included in the recommendations list as well as the count of films by the top actor.
-
-## My task
-Imagine that I am a fresher data analyst of the team. My supervisor, who is experience data leader(Mr. Danny), gave a solution plan. I will follow that plan to solve the problem 
-
-## Entity Relationship Diagram
-![ERD](https://user-images.githubusercontent.com/88806544/161838741-8d4b8abe-5c74-4658-9fc9-ace1a7ead26b.png)
-
-## Solving problem and code
-<details>
-<summary>
-Click the link to see my code!
-</summary>
-  
-1. [Approach to solve problem](https://github.com/Trisdoan/SQL_Serious_SQL/blob/41822fa526e594aa1bcf8a3cdae0818650829327/Marketing_Analytics/Solving%20Approach.md)
-2. [Code](https://github.com/Trisdoan/SQL_Serious_SQL/blob/2fc59be06797238dee17a76d744a4aa4ba6bcf8a/Marketing_Analytics/code.sql)
-
-</details>
-  
-***
-
+* Using **Join, Aggregation functions, CTEs** and **Windown Functions** to create final report.
