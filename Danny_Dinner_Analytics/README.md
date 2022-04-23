@@ -1,18 +1,12 @@
-# Case Study: Marketing Analytics
+# Case Study: Danny Dinner
 CREDIT: Danny Ma.
 
 You can view his challenge here: https://8weeksqlchallenge.com/case-study-1/
 
-## Table of Contents
-- [Case Study Overview](#case-study-overview)
-- [Case study questionss](#case-study-questions)
-***
-
 ## Case Study Overview
-We have been asked to support the customer analytics team at DVD Rental Co who have been tasked with generating the necessary data points required to populate specific parts of this first-ever customer email campaign.
+Help the owner of the restauntant to generate some basic datasets so his team can easily inspect the data without needing to use SQL.
 
 ## Case study questions
-
 1. What is the total amount each customer spent at the restaurant?
 2. How many days has each customer visited the restaurant?
 3. What was the first item from the menu purchased by each customer?
