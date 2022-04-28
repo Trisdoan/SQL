@@ -6,6 +6,11 @@ You can view his challenge here: https://8weeksqlchallenge.com/case-study-1/
 ## Case Study Overview
 Help the owner of the restauntant to generate some basic datasets so his team can easily inspect the data without needing to use SQL.
 
+## Summarized Insights
+1. asd
+2. sdasd
+3. asd
+
 ## 1. What is the total amount each customer spent at the restaurant?
 
 ### Steps:
