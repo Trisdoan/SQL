@@ -7,12 +7,13 @@ You can view his course here: https://www.datawithdanny.com/
 # Project Overview
 Customer analytics team at DVD Rental Co who have been tasked with generating the necessary data points required to populate specific parts of this first-ever customer email campaign. Imagine that I am a fresher data analyst of the team. My supervisor, who is experience data leader(Mr. Danny), gave a solution plan. I will follow that plan to solve the problem.
 
-* Using **Join, Aggregation functions, CTEs** and **Windown Functions** to create final report.
-
 # Summarized Insights
 
-
 # Here is the approach to solve the problem
+
+There are 2 big steps:
+* Main report: it contains all steps to solve the problem. At the end, there is final report which contrains information about customers who rented films and recommendations for them.
+* Extra insights: there are 11 questions that can be asked by the marketing team.
 
 ## Main report
 
@@ -511,8 +512,8 @@ CREATE TEMP TABLE report_table AS
 ### 1. Which film title was the most recommended for all customers?
 
 #### Steps:
-- Use 
-- 
+- Use **Union Join** to combine 2 recommendation tables created
+
 ````sql
 With cte as
 (Select 
@@ -540,8 +541,7 @@ LIMIT 1;
 ### 2. How many customers were included in the email campaign?
 
 #### Steps:
-- Use 
-
+- Use **COUNT DISTINCT** to count how many customers in total 
 
 ````sql
 SELECT
@@ -556,7 +556,8 @@ FROM report_table;
 ### 3. Out of all the possible films - what percentage coverage do we have in our recommendations?
 
 #### Steps:
-- Use
+- Use **UNION JOIN** to extract all recommended films
+- Use **CROSS JOIN** to calculate percentages
 
 ````sql
 
