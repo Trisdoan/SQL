@@ -9,6 +9,11 @@ Customer analytics team at DVD Rental Co who have been tasked with generating th
 
 # Summarized Insights
 
+1. There are 27 films rented average by each customers.
+2. The most popular category is Animation. It's interesting. Probably it's related to age of customers. We need more data about customer profiles
+3. The most popular actor is GINA DEGENERES. The company should work more with this actor when lots of customers demand her.
+4. The most popular title is Juggler Hardy.
+
 # Here is the approach to solve the problem
 
 There are 2 big steps:
@@ -589,7 +594,7 @@ From actor_recommendations
 ### 4. What is the most popular top category?
 
 #### Steps:
-- Use
+- Use **COUNT** to count all films in each category
 
 ````sql
 Select
@@ -611,7 +616,9 @@ LIMIT 1;
 ### 5. What is the 4th most popular top category?
 
 #### Steps:
-- Use
+
+- Use **CTE** and  **ROW_NUMBER** to rank category in top category
+- Using **WHERE** to filter the 4th category
 
 ````sql
 WITH cte AS
@@ -636,8 +643,10 @@ GROUP BY 1
 
 
 ### 6. What is the average percentile ranking for each customer in their top category
+
 #### Steps:
-- Use
+
+- Use **AVG** to calculate average percentile for top categories 
 
 ````sql
 Select
@@ -652,8 +661,10 @@ From first_top_category_insights;
 
 
 ### 7. What is the cumulative distribution of the top 5 percentile values for the top category from the first_category_insights table
+
 #### Steps:
-- Use
+
+- Use **CUME_DIST** to calculate cumulative distribution of top 5 percentile categories.
 
 ````sql
 SELECT
@@ -675,8 +686,9 @@ LIMIT 5;
 
 
 ### 8. What is the median of the second category percentage of entire viewing history?
+
 #### Steps:
-- Use
+- Use **PERCENTILE_CONT** to find median of viewing history
 
 ````sql
 Select 
@@ -690,8 +702,9 @@ from second_category_insights;
 
 
 ### 9. What is the 80th percentile of films watched featuring each customer’s favourite actor?
+
 #### Steps:
-- Use
+- Use **PERCENTILE_CONT** to calculate 80th percentile of top actors
 
 ````sql
 SELECT 
@@ -706,8 +719,6 @@ FROM top_actor_counts;
     
     
  ### 10. What was the average number of films watched by each customer
-#### Steps:
-- Use
 
 ````sql
 SELECT
@@ -720,8 +731,6 @@ From total_counts;
 
 
  ### 11. What is the top combination of top 2 categories and how many customers if the order is relevant
-#### Steps:
-- Use
 
 ````sql
 Select  
@@ -740,8 +749,6 @@ LIMIT 1;
 
 
  ### 12. Which actor was the most popular for all customers?
-#### Steps:
-- Use
 
 ````sql
 SELECT 
@@ -759,8 +766,6 @@ LIMIT 1;
 
 
  ### 13. How many films on average had customers already seen that feature their favourite actor
-#### Steps:
-- Use
 
 ````sql
 Select
