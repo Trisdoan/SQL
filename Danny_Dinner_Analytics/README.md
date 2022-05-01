@@ -4,12 +4,27 @@ CREDIT: Danny Ma.
 You can view his challenge here: https://8weeksqlchallenge.com/case-study-1/
 
 ## Case Study Overview
-Help the owner of the restauntant to generate some basic datasets so his team can easily inspect the data without needing to use SQL.
+Help the owner of the restauntant to generate some datasets so his team can easily inspect the data without needing to use SQL.
+
+**1. Visiting patterns**
+
+**2. Amount customers have spent**
+
+**3. Top favorite products**
 
 ## Summarized Insights
-1. asd
-2. sdasd
-3. asd
+
+1. So far, **customer A spent the most**, followed by customer B and C
+2. However, **customer B visited the restaurant quite often**.
+3. Customer **A and C seem like ramen** when it was the top 1 item purchased. While **customer B liked all dishes equally**.
+4. After becoming member, customer A purchased curry, while customer B purchased sushi. **Customer C has not been a member yet**.
+
+
+## Techniques I used:
+1. CTE
+2. Windown function: ROW_NUMBER, RANK()
+3. Aggregate functions: SUM, COUNT
+4. CASE WHEN
 
 ## 1. What is the total amount each customer spent at the restaurant?
 
