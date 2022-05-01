@@ -14,8 +14,10 @@ Help the owner of the restauntant to generate some basic datasets so his team ca
 ## 1. What is the total amount each customer spent at the restaurant?
 
 ### Steps:
-- Use 
-- 
+- Use **LEFT JOIN** to find all sales for each customers
+- Use **SUM** to calculate total sales per customers
+
+
 ````sql
 Select
     customer_id,
@@ -37,7 +39,7 @@ Order by total_sales DESC;
 ## 2. How many days has each customer visited the restaurant?
 
 ### Steps:
-- Use 
+- Use **COUNT AND GROUP BY** to find how many days each customers visited
 
 
 ````sql
@@ -60,7 +62,8 @@ Order by days  DESC;
 ## 3. What was the first item from the menu purchased by each customer?
 
 ### Steps:
-- Use
+- Use **CTE** and **RANK()** to rank order by each customers
+- Use **SELECT DISTINCT** to find the first item purchased
 
 ````sql
 With ranked_order AS (
@@ -91,7 +94,8 @@ JOIN dannys_diner.menu B
 ## 4. What is the most purchased item on the menu and how many times was it purchased by all customers?
 
 ### Steps:
-- Use
+- Use **LEFT JOIN** to find all number of products
+- Use **GROUP BY** and **ORDER** to find the most item purchased
 
 ````sql
 Select
@@ -114,7 +118,8 @@ Limit 1;
 ## 5. Which item was the most popular for each customer?
 
 ### Steps:
-- Use
+- Use **CTE** and **RANK()** to find and rank all items purchased by each customers
+- Get only the first rank of each customers
 
 ````sql
 WITH cte AS (
@@ -123,7 +128,6 @@ Select
     A.product_id,
     product_name,
     COunt(*) as count_sales,
-
     RANK() OVER(PARTITION BY customer_id ORDER BY  COunt(*) DESC) as sales_rank 
 From dannys_diner.sales A 
 Left join dannys_diner.menu B 
@@ -153,7 +157,8 @@ GROUP BY customer_id, A.product_id, product_name
 ## 6. Which item was purchased first by the customer after they became a member?
 
 ### Steps:
-- Use
+- Use **CTE** and **RANK()*** to rank each time customers purchased
+- Use **LEFT JOIN** to join back to table menu to get product_name
 
 ````sql
 With cte AS (
@@ -189,8 +194,10 @@ ORDER BY customer_id;
 
 
 ## 7. Which item was purchased just before the customer became a member?
+
 ### Steps:
-- Use
+- Use **CTE** and **RANK()*** to rank each time customers purchased
+- Use **LEFT JOIN** to join back to table menu to get product_name
 
 ````sql
 With cte AS (
@@ -225,7 +232,8 @@ ORDER BY customer_id;
 
 ## 8. What is the total items and amount spent for each member before they became a member?
 ### Steps:
-- Use
+- Use **LEFT JOIN** to get information of each items when they were purchased
+- Use **WHERE** to get items only order_date < join_date
 
 ````sql
 Select
@@ -248,8 +256,9 @@ Group  by A.customer_id;
 
 
 ## 9. If each $1 spent equates to 10 points and sushi has a 2x points multiplier. How many points would each customer have?
+
 ### Steps:
-- Use
+- Use **CASE WHEN** to double the point for product "sushi"
 
 ````sql
 Select
@@ -272,8 +281,9 @@ Group by customer_id;
 
 
 ## 10. In the first week after a customer joins the program(including their join date),they earn 2x points on all items. Not just sushi, how many points do customer A and B have at the end of January?
+
 ### Steps:
-- Use
+- Use **CASE WHEN** to double the point for product "sushi" and first period when they became membership
 
 ````sql
 Select
@@ -300,8 +310,10 @@ ORDER BY customer_id;
 
 
  ## 11. Danny also requires further information about the ranking of customer products, but he purposely does not need the ranking for non-member purchases so he expects null ranking values for the records when customers are not yet part of the loyalty program.
+ 
 ### Steps:
-- Use
+- Use **CREATE TEMP TABLE** to create a dataset which contains item information, including boolean column "member"
+- Use **CASE WHEN** and **DENSE_RANK()** to rank products based on order_date 
 
 ````sql
 DROP TABLE IF EXISTS all_info;
