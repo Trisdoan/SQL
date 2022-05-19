@@ -12,12 +12,15 @@ Assist HR Analytica to construct datasets to answer basic reporting questions an
 # Summarized Insights
 
 
-## Contructing a report
+## Data Cleaning
 
 ### 1. Creating a materialized view and cleaning dataset
 
 #### Steps:
-- 
+- Created schema named mv_employee. Because I did not want to adjust on original dataset
+- Created materialized views for new schema.
+- In materialized view mv_employees.department_employee, there were wrong input of data. So I added 18 years for columns: from_date, to_date.
+- I did the same for materialized view department_manager, employee, salary, title
 
 ````sql
 DROP SCHEMA IF EXISTS mv_employees CASCADE;
@@ -106,10 +109,12 @@ CREATE UNIQUE INDEX ON mv_employees.title USING btree (employee_id, title, from_
 ````
 
 
-### 2. 
+### 2. Created materialized view current_overview which contains current data of company.
 
 #### Steps:
-- 
+- Firstly, I used **CTE** to generate previous salary for each employees, which are called lag_salary.
+- Then combine all tables together to generate full data by **INNER JOIN**.
+- Finally, I used **DATE_PART()** to calculate calculate tenure years.
 
 ````sql
 DROP  MATERIALIZED VIEW IF EXISTS mv_employees.current_overview CASCADE;
@@ -178,10 +183,13 @@ With lag_salary AS (
     From final_output;
 ````
 
-### 3. 
+### 3. Create aggregation view at company level
 
 #### Steps:
-- 
+- Used **Sum() Over** to calculate percentage of employee count.
+- Used aggregation funtions: **AVG**, **MIN**, **MAX**.
+- Used **PERCENTILE_CONT** to calculate meduan and inter quartile for salary
+- Used **STDEV** to calculate standard deviation.
 
 ````sql
 DROP VIEW IF EXISTS mv_employees.company_level CASCADE;
@@ -197,16 +205,16 @@ CREATE VIEW mv_employees.company_level AS
     MAX(current_salary) as max_salary,
     PERCENTILE_CONT(0.5) WITHIN GROUP(ORDER BY current_salary) AS median_salary,
     PERCENTILE_CONT(0.75) WITHIN GROUP(ORDER BY current_salary) -
-      PERCENTILE_CONT(0.25) WITHIN GROUP(ORDER BY current_salary) AS inter_quartile_salary,
+    PERCENTILE_CONT(0.25) WITHIN GROUP(ORDER BY current_salary) AS inter_quartile_salary,
     STDDEV(current_salary) AS std_salary
   From mv_employees.current_overview 
   GROUP BY gender;
 ````
 
-### 4. 
+### 4. Create aggregation view at department level
 
 #### Steps:
-- 
+- I did the same but replaced with gender and department.
 
 ````sql
 DROP VIEW IF EXISTS mv_employees.department_level CASCADE;
@@ -222,16 +230,17 @@ CREATE VIEW mv_employees.department_level AS
     MAX(current_salary) as max_salary,
     PERCENTILE_CONT(0.5) WITHIN GROUP(ORDER BY current_salary) AS median_salary,
     PERCENTILE_CONT(0.75) WITHIN GROUP(ORDER BY current_salary) -
-      PERCENTILE_CONT(0.25) WITHIN GROUP(ORDER BY current_salary) AS inter_quartile_salary,
+    PERCENTILE_CONT(0.25) WITHIN GROUP(ORDER BY current_salary) AS inter_quartile_salary,
     STDDEV(current_salary) AS std_salary
   From mv_employees.current_overview 
   GROUP BY gender, department;
 ````
 
-### 5. 
+### 5. Create aggregation view at title level
 
 #### Steps:
-- 
+- I did the same but replaced with gender and title.
+
 ````sql
 DROP VIEW IF EXISTS mv_employees.title_level CASCADE;
 CREATE VIEW mv_employees.title_level AS 
@@ -246,16 +255,13 @@ CREATE VIEW mv_employees.title_level AS
     MAX(current_salary) as max_salary,
     PERCENTILE_CONT(0.5) WITHIN GROUP(ORDER BY current_salary) AS median_salary,
     PERCENTILE_CONT(0.75) WITHIN GROUP(ORDER BY current_salary) -
-      PERCENTILE_CONT(0.25) WITHIN GROUP(ORDER BY current_salary) AS inter_quartile_salary,
+    PERCENTILE_CONT(0.25) WITHIN GROUP(ORDER BY current_salary) AS inter_quartile_salary,
     STDDEV(current_salary) AS std_salary
   From mv_employees.current_overview 
   GROUP BY gender, title);
 ````
 
-### 6. 
-
-#### Steps:
-- 
+### 6. Create benchmark views which compares average salary at company, gender, department, title level.
 
 ````sql
 DROP VIEW IF EXISTS mv_employees.company_tenure_benchmark CASCADE;
@@ -282,7 +288,6 @@ SELECT
 FROM mv_employees.current_overview
 GROUP BY department;
 
-
 DROP VIEW IF EXISTS mv_employees.title_benchmark CASCADE;
 CREATE VIEW mv_employees.title_benchmark AS 
 SELECT
@@ -294,10 +299,13 @@ GROUP BY title;
 
 
 
-### 7. 
+### 7. Created datasets which contains history records of employees
 
 #### Steps:
-- 
+- Firstly, I used **CTE** and **Subquery** to generate previous salary and rank for each events.
+- Then I joined all related tables. In addition to that, I used **GREATEST** and **LEAST** to return latest and earliest date.
+- The next step is to rank the events for each employee.
+- Finally, I combined all datas, which includes salary change, and difference from average salary at department, title, gender levels.
 
 ````sql
 DROP MATERIALIZED VIEW IF EXISTS mv_employees.historic_employee_records;
@@ -450,6 +458,7 @@ SELECT
       
       ROUND(title_benchmark_salary) AS title_benchmark_salary,
       ROUND(100*(base.current_salary - title_benchmark_salary)/title_benchmark_salary::NUMERIC) AS title_comparison,
+      
       base.start_date,
       base.end_date
     From ordered_event as base
@@ -466,12 +475,13 @@ SELECT
   From final_out;
 ````
 
-## Ad-hoc requests about 
+## Ad-hoc requests about current status of company.
 
 ### 1. How many current employees have the equal longest tenure years in their current title?
 
 #### Steps:
-- 
+- I used **CTE** to generate longest tenure year for each title
+- Filted by comparing to longest year
 
 ````sql
 WITH cte AS (
@@ -805,20 +815,34 @@ WHERE event_order = 1
 
 
 
-### 7. What is the cumulative distribution of the top 5 percentile values for the top category from the first_category_insights table
+### 7. On average, how many different titles did each churn employee hold rounded to 1 decimal place?
 
 #### Steps:
 
 - Use **CUME_DIST** to calculate cumulative distribution of top 5 percentile categories.
 
 ````sql
-SELECT
-  ROUND(percentile) as percentile,
-  ROUND(100*CUME_DIST() OVER(ORDER BY ROUND(percentile))) AS cum_dist
-FROM first_top_category_insights
-GROUP BY 1
-ORDER BY 1
-LIMIT 5;
+WITH churn_employee AS (  
+  Select
+    employee_id
+  From mv_employees.historic_employee_records
+  WHERE end_date != '9999-01-01'
+    AND event_order = 1
+),
+  title_count AS (
+  Select
+    employee_id,
+    COUNT(DISTINCT title) AS title_count
+  From mv_employees.historic_employee_records A
+  WHERE EXISTS(
+        SELECT 1
+        FROM churn_employee B
+        WHERE A.employee_id = B.employee_id)
+  GROUP BY employee_id
+)
+  Select
+    ROUND(AVG(title_count),2)
+  From title_count;
 ````
 | percentile  | cum_dist    |
 | ----------- | ----------- |
@@ -830,15 +854,18 @@ LIMIT 5;
 
 
 
-### 8. What is the median of the second category percentage of entire viewing history?
+### 8. What was the average last pay increase for churn employees?
 
 #### Steps:
 - Use **PERCENTILE_CONT** to find median of viewing history
 
 ````sql
-Select 
-  percentile_cont(0.5) within Group(order by percentage_difference) as median
-from second_category_insights;
+Select
+    AVG(salary_change)
+  From mv_employees.historic_employee_records
+  WHERE end_date != '9999-01-01'
+    AND event_order = 1
+    AND salary_change > 0;
 ````
 | median      |       
 | ----------- | 
@@ -846,15 +873,32 @@ from second_category_insights;
 
 
 
-### 9. What is the 80th percentile of films watched featuring each customer’s favourite actor?
+### 9. What percentage of churn employees had a pay decrease event in their last 5 events?
 
 #### Steps:
-- Use **PERCENTILE_CONT** to calculate 80th percentile of top actors
+- 
 
 ````sql
-SELECT 
- PERCENTILE_CONT(0.8) within Group(order by rental_count) as eighth_rental_count
-FROM top_actor_counts;
+WITH decreased_salary AS (
+  Select
+    employee_id,
+    MAX( CASE
+            WHEN event_name = 'Salary Decrease' THEN 1
+            ELSE 0
+          END) AS decrease_flag
+  From mv_employees.historic_employee_records A 
+  WHERE EXISTS (
+          SELECT 1
+          FROM mv_employees.historic_employee_records B 
+          WHERE end_date != '9999-01-01'
+              AND event_order = 1
+              AND B.employee_id = A.employee_id)
+    AND event_order <= 5
+  GROUP BY employee_id
+)
+  SELECT
+    ROUND((SUM(decrease_flag)/COUNT(*)::NUMERIC)*100,2)
+  FROM decreased_salary;
 ````
 | eighth_rental_count | 
 | ------------------- | 
@@ -862,47 +906,58 @@ FROM top_actor_counts;
 
 
     
-    
- ### 10. What was the average number of films watched by each customer
+ # Part 2:
+ 
+ ## 1. How many managers are there currently in the company?
 
 ````sql
-SELECT
-    round(AVG(total_count)) as avg_num_film
-From total_counts;
+Select count(*)
+From mv_employees.department_manager
+WHERE to_date = '9999-01-01';
 ````
 | avg_num_film |
 | ------------ |
 | 27           | 
 
 
- ### 11. What is the top combination of top 2 categories and how many customers if the order is relevant
+ ### 2. How many employees have ever been a manager?
 
 ````sql
-Select  
-    cat_1,
-    cat_2,
-    COUNT(customer_id) as number_of_customer
-FROM report_table
-GROUP BY cat_1,
-         cat_2
-ORDER BY number_of_customer DESC
-LIMIT 1;
+WITH cte AS (
+Select
+  DISTINCT employee_id
+FROM mv_employees.historic_employee_records A 
+WHERE EXISTS (
+      Select 1
+      From mv_employees.department_manager B
+      WHERE A.employee_id = B.employee_id
+)
+)
+  Select
+    COUNT(*)
+  FROM cte;
 ````
 |cat_1        | cat_2       | number_of_customer   |
 | ----------- | ----------- |--------------------- |
 | Animation   | Sci-Fi      |8                     |
 
 
- ### 12. Which actor was the most popular for all customers?
+ ### 3. On average - how long did it take for an employee to first become a manager from their the date they were originally hired in days?
 
 ````sql
+WITH first_date AS (
 SELECT 
-    actor_name,
-    COUNT(*) as occurence
-FROM report_table
-GROUP BY actor_name 
-ORDER BY occurence DESC 
-LIMIT 1;
+  employee_id,
+  MIN(from_date) as first_date
+FROM mv_employees.title
+WHERE title = 'Manager'
+GROUP BY employee_id
+)
+  Select 
+    AVG(DATE_PART('DAY', B.first_date::TIMESTAMP -  A.hire_date::timestamp))
+  From mv_employees.employee A 
+  INNER JOIN first_date B 
+      ON A.id = B.employee_id;
 ````
 | actor_name      | occurence |
 | --------------- | ----------|
@@ -910,16 +965,124 @@ LIMIT 1;
 
 
 
- ### 13. How many films on average had customers already seen that feature their favourite actor
+ ### 4. What was the most common titles that managers had just before before they became a manager?
 
 ````sql
-Select
-    ROUND(AVG(rental_count)) as avg_film
-FROM top_actor_counts;
+WITH lag_jobs AS (
+SELECT
+  employee_id,
+  title,
+  LAG(title) OVER (PARTITION  BY employee_id ORDER BY from_date) AS previous_job
+FROM mv_employees.title 
+)
+  Select
+    previous_job,
+    COUNT(*) as count_title
+  FROM lag_jobs
+  WHERE title = 'Manager'
+    AND previous_job IS NOT NULL
+  GROUP BY previous_job;
 ````
 | avg_film    | 
 | ----------- | 
 | 4           | 
 
 
-***
+
+ ### 5. How many managers were first hired by the company as a manager?
+
+````sql
+WITH lag_jobs AS (
+SELECT
+  employee_id,
+  title,
+  LAG(title) OVER (PARTITION  BY employee_id ORDER BY from_date) AS previous_job
+FROM mv_employees.title 
+)
+  Select
+    COUNT(*) as count_title
+  FROM lag_jobs
+  WHERE title = 'Manager'
+    AND previous_job IS  NULL;
+````
+| avg_film    | 
+| ----------- | 
+| 4           | 
+
+
+
+
+ ### 6. On average - how much more do current managers make on average compared to all other employees rounded to the nearest dollar?
+
+````sql
+WITH manager_cte AS (
+    Select 
+      AVG(current_salary) AS manager_salary
+    From mv_employees.current_overview
+    WHERE title = 'Manager'
+),
+  staff_cte AS (
+    Select
+      AVG(current_salary) AS staff_salary
+    From mv_employees.current_overview
+    WHERE title != 'Manager'
+)
+  Select
+    ROUND(manager_salary - staff_salary)
+  From staff_cte, manager_cte;
+````
+| avg_film    | 
+| ----------- | 
+| 4           | 
+
+
+
+
+
+ ### 7. Which current manager has the most employees in their department?
+
+````sql
+WITH employee_count_cte AS (
+    SELECT 
+      department,
+      COUNT(*) AS employee_count
+    FROM mv_employees.current_overview 
+    WHERE title != 'Manager'
+    GROUP BY department
+    ORDER BY employee_count DESC
+    LIMIT 1
+)
+    SELECT 
+      employee,
+      A.department
+    FROM mv_employees.current_overview A 
+    INNER JOIN employee_count_cte B
+        ON A.department = B.department
+    WHERE A.title = 'Manager';
+````
+
+
+ ### 8. What is the difference in employee count between the 3rd and 4th ranking departments by size?
+
+````sql
+WITH dept_size AS (
+SELECT
+    department,
+    COUNT(*) AS dept_size
+FROM mv_employees.current_overview
+GROUP BY department
+),
+  ranked_dept AS (
+  Select
+    department,
+    RANK() OVER (ORDER BY dept_size DESC) AS ranked_,
+    dept_size - LEAD(dept_size) OVER (ORDER BY dept_size DESC) AS size_diff
+  From dept_size 
+)
+  Select *
+  FROM ranked_dept
+  WHERE ranked_ = 3;
+````
+
+
+
