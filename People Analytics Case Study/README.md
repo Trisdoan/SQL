@@ -214,7 +214,7 @@ CREATE VIEW mv_employees.company_level AS
 ### 4. Create aggregation view at department level
 
 #### Steps:
-- I did the same but replaced with gender and department.
+- I did the same as above but replaced with gender and department.
 
 ````sql
 DROP VIEW IF EXISTS mv_employees.department_level CASCADE;
@@ -481,7 +481,7 @@ SELECT
 
 #### Steps:
 - I used **CTE** to generate longest tenure year for each title
-- Filted by comparing to longest year
+- Filted by comparing to longest year.
 
 ````sql
 WITH cte AS (
@@ -497,34 +497,41 @@ Select
 FROM mv_employees.current_overview A, cte
 WHERE title_tenure_year = longest;
 ````
+#### Insight:
+
 
 ### 2. Which department has the least number of current employees?
 
+#### Steps:
+- Aggregated by **COUNT**
 
 ````sql
 Select
   department,
   count(*) 
 From mv_employees.current_overview
-WHERE department in ('Production', 'Sales', 'Development','Customer Service')
 Group by department
 Order by count(*);
 ````
+#### Insight:
+
 
 ### 3. What is the largest difference between minimimum and maximum salary values for all current employees?
-
 
 ````sql
 Select
   MAX(current_salary) - MIN(current_salary)
 From mv_employees.current_overview;
 ````
+#### Insight:
+
 
 
 ### 4. How many male employees are above the overall average salary value for the `Production` department?
 
 #### Steps:
-- 
+- Firstly, I created **CTE** and windown function **AVG()** to calculate average salary for department "Production"
+- Used **CASE WHEN** filter and count who have salary above average salary
 
 ````sql
 WITH cte AS (
@@ -547,11 +554,15 @@ WHERE  department = 'Production'
   WHERE  gender = 'M'
 AND current_salary > average_salary ;
 ````
+#### Insight:
 
 
 
 ### 5. Which title has the highest average salary for male employees?
 
+#### Steps:
+- Used **AVG** to calculate average current salary when filtering who are males
+- Used **ORDER BY** to rank average salary
 
 ````sql
 Select
@@ -563,12 +574,14 @@ Select
   ORDER BY AVG(current_salary) DESC
   Limit 1;
 ````
+#### Insight:
 
 
 ### 6. Which department has the highest average salary for female employees?
 
 #### Steps:
-- 
+- I did the same as above but replaced filtering who are females.
+
 ````sql
 Select
     department,
@@ -579,11 +592,12 @@ Select
   ORDER BY AVG(current_salary) DESC
   Limit 1;
 ````
+#### Insight:
+
 
 ### 7. Which department has the most female employees?
 
-#### Steps:
-- 
+
 ````sql
 Select
   department,
@@ -594,10 +608,13 @@ GROUP BY department
 ORDER BY COUNT(employee) desc;
 ````
 
+
+
 ### 8. What is the gender ratio in the department which has the highest average male salary and what is the average male salary value rounded to the nearest integer?
 
 #### Steps:
-- 
+- Firstly, I created **CTE** to calculate average salary for the highest paid department, filtered who are males.
+- Then joined with table current_overview to count number of employees.
 
 ````sql
 WITH cte AS (
@@ -620,10 +637,9 @@ WITH cte AS (
   GROUP BY gender, average_salary;
 ````
 
+
 ### 9. HR Analytica want to change the average salary increase percentage value to 2 decimal places. What should the new value be for males for the company level dashboard?
 
-#### Steps:
-- 
 ````sql
 Select 
   Gender,
@@ -636,7 +652,9 @@ GROUP BY gender;
 ### 10. How many current employees have the equal longest overall time in their current positions (not in years)?
 
 #### Steps:
-- 
+- Firstly, I created **CTE** recalculate_cte to generate tenure years for each department_id
+- Then another **CTE** max_time to find the longest tenure years
+- Finally, joined those CTE together to calculate number of employees in the department which has longest tenure years.
 
 ````sql
 WITH recalculate_cte AS (
@@ -647,8 +665,8 @@ From mv_employees.department_employee
 ),
   max_time AS (
   Select  
-  department_id,
-  MAX(DATE_PART('day', now()) - DATE_PART('day', from_date)) as max_tenure
+    department_id,
+    MAX(DATE_PART('day', now()) - DATE_PART('day', from_date)) as max_tenure
   From mv_employees.department_employee
   GROUP BY department_id
 )
@@ -661,21 +679,29 @@ From mv_employees.department_employee
 ````
 
 
-## Ad-hoc requests about ## Questions from marketing team
+## Ad-hoc requests about Employee Churn of company.
 
 ### 1. How many employees have left the company?
 
 #### Steps:
-- Use **Union Join** to combine 2 recommendation tables created
+- Filtered employees who have end_date different from 9999-01-01, an abstract date for current employees.
 
 ````sql
-Select COUNT(employee)
+Select 
+  COUNT(employee)
 From mv_employees.historic_employee_records
 WHERE event_order = 1
   AND end_date != '9999-01-01'
-  
--- What percentage of churn employees were male?
+ ````
+ 
+### 2. What percentage of churn employees were male?
 
+#### Steps:
+- Firstly, I created **CTE** to count number of churn employees, meaning who just left company
+- Then filtered data who are males
+- Finally, I used **CROSS JOIN** to calculate percentage of churn male employees compared to all churn employees.
+
+````sql
 WITH cte AS (
     Select
       COUNT(employee) AS churn_employee_total
@@ -697,16 +723,10 @@ WITH cte AS (
   CROSS JOIN cte;
 ````
 
-| title          | reco_count  |
-| ---------------| ----------- |
-|JUGGLER HARDLY  | 145         |
 
 
+### 3. Which title had the most churn?
 
-### 2. Which title had the most churn?
-
-#### Steps:
-- U
 
 ````sql
 Select 
@@ -718,47 +738,29 @@ WHERE event_order = 1
 GROUP BY title
 ORDER BY churn_employee DESC;
 ````
-| count_customers |
-| ----------------| 
-| 599             |
 
 
-### 3. Which department had the most churn?
+### 4. Which department had the most churn?
 
-#### Steps:
-- 
 
 ````sql
-with cte as
-(Select 
-    title
-From category_recommendations
-UNION 
 Select 
-    title
-From actor_recommendations
-)
-  Select  
-      Count(distinct A.title) as film_reco,
-      Count(distinct B.title) as film_total,
-      ROUND( Count(distinct A.title)::NUMERIC/Count(distinct B.title)::NUMERIC,5) as coverage
-  From cte A 
-  CROSS JOIN dvd_rentals.film B;
+  department,
+  COUNT(employee) AS churn_employee
+From mv_employees.historic_employee_records
+WHERE event_order = 1
+  AND end_date != '9999-01-01'
+GROUP BY department
+ORDER BY churn_employee DESC;
   
 ````
-| film_reco   | film_total  | coverage   |
-| ----------- | ----------- |----------- |
-| 250         | 1000        |0.25000     |
 
 
-
-
-
-
-### 4. Which year had the most churn?
+### 5. Which year had the most churn?
 
 #### Steps:
-- U
+- I used **EXTRACT** to get year from end_date column
+- Then count employees who just left company
 
 ````sql
 Select 
@@ -770,15 +772,10 @@ WHERE event_order = 1
 GROUP BY EXTRACT('year' from end_date)
 ORDER BY churn_employee DESC;
 ````
-| category_name | count_category |
-| --------------| -------------- |
-| Animation     | 63             |
 
 
 
-
-
-### 5. What was the average salary for each employees who has left the company rounded to the nearest integer?
+### 6. What was the average salary for each employees who has left the company rounded to the nearest integer?
 
 #### Steps:
 - 
@@ -789,17 +786,12 @@ From mv_employees.historic_employee_records
 WHERE event_order = 1
   AND end_date != '9999-01-01';
 ````
-| category_name |
-| --------------| 
-| Documentary   |
 
 
-
-
-### 6. What was the median total company tenure for each churn employee just bfore they left?
+### 7. What was the median total company tenure for each churn employee just bfore they left?
 
 #### Steps:
-- Use **AVG** to calculate average percentile for top categories 
+- Used **PERCENTILE_CONT(0.5)** to find median of tenure year
 
 ````sql
 Select 
@@ -808,18 +800,13 @@ From mv_employees.historic_employee_records
 WHERE event_order = 1
   AND end_date != '9999-01-01';
 ````
-| avg_percentile |
-| -------------- |
-| 5.232          |
 
-
-
-
-### 7. On average, how many different titles did each churn employee hold rounded to 1 decimal place?
+### 8. On average, how many different titles did each churn employee hold rounded to 1 decimal place?
 
 #### Steps:
 
-- Use **CUME_DIST** to calculate cumulative distribution of top 5 percentile categories.
+- Firstly, I created **CTE** to generate employees who have just left the company
+- Then I used **ANTI JOIN** to join with historic_employee_records to count title
 
 ````sql
 WITH churn_employee AS (  
@@ -844,20 +831,11 @@ WITH churn_employee AS (
     ROUND(AVG(title_count),2)
   From title_count;
 ````
-| percentile  | cum_dist    |
-| ----------- | ----------- |
-| 1           | 5           |
-| 2           | 9           |
-| 3           | 14          |
-| 4           | 18          |
-| 5           | 23          |
 
 
 
-### 8. What was the average last pay increase for churn employees?
+### 9. What was the average last pay increase for churn employees?
 
-#### Steps:
-- Use **PERCENTILE_CONT** to find median of viewing history
 
 ````sql
 Select
@@ -867,16 +845,16 @@ Select
     AND event_order = 1
     AND salary_change > 0;
 ````
-| median      |       
-| ----------- | 
-| 13           | 
 
 
 
-### 9. What percentage of churn employees had a pay decrease event in their last 5 events?
+
+### 10. What percentage of churn employees had a pay decrease event in their last 5 events?
 
 #### Steps:
-- 
+- Firstly, I created **CTE** decreased_salary to find employees who had salary decreased in their last 5 events
+- In this CTE, I used **CASE WHEN** and **MAX** to check who have decreased salary
+- Then I used **ANTI JOIN** to deduplicate
 
 ````sql
 WITH decreased_salary AS (
@@ -900,13 +878,10 @@ WITH decreased_salary AS (
     ROUND((SUM(decrease_flag)/COUNT(*)::NUMERIC)*100,2)
   FROM decreased_salary;
 ````
-| eighth_rental_count | 
-| ------------------- | 
-| 5                   |
 
 
     
- # Part 2:
+ # Ad-hoc requests about management analysis of company.
  
  ## 1. How many managers are there currently in the company?
 
@@ -915,9 +890,7 @@ Select count(*)
 From mv_employees.department_manager
 WHERE to_date = '9999-01-01';
 ````
-| avg_num_film |
-| ------------ |
-| 27           | 
+
 
 
  ### 2. How many employees have ever been a manager?
@@ -937,9 +910,7 @@ WHERE EXISTS (
     COUNT(*)
   FROM cte;
 ````
-|cat_1        | cat_2       | number_of_customer   |
-| ----------- | ----------- |--------------------- |
-| Animation   | Sci-Fi      |8                     |
+
 
 
  ### 3. On average - how long did it take for an employee to first become a manager from their the date they were originally hired in days?
@@ -959,9 +930,7 @@ GROUP BY employee_id
   INNER JOIN first_date B 
       ON A.id = B.employee_id;
 ````
-| actor_name      | occurence |
-| --------------- | ----------|
-| GINA DEGENERES  | 19        |
+
 
 
 
@@ -983,10 +952,6 @@ FROM mv_employees.title
     AND previous_job IS NOT NULL
   GROUP BY previous_job;
 ````
-| avg_film    | 
-| ----------- | 
-| 4           | 
-
 
 
  ### 5. How many managers were first hired by the company as a manager?
@@ -1005,9 +970,7 @@ FROM mv_employees.title
   WHERE title = 'Manager'
     AND previous_job IS  NULL;
 ````
-| avg_film    | 
-| ----------- | 
-| 4           | 
+
 
 
 
@@ -1031,12 +994,6 @@ WITH manager_cte AS (
     ROUND(manager_salary - staff_salary)
   From staff_cte, manager_cte;
 ````
-| avg_film    | 
-| ----------- | 
-| 4           | 
-
-
-
 
 
  ### 7. Which current manager has the most employees in their department?
