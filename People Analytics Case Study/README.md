@@ -658,7 +658,7 @@ Select
 From mv_employees.current_overview
 GROUP BY gender;
 ````
-<img src="images/1_9.png" width="500"/>
+<img src="images/1_9.png" width="250"/>
 
 
 ### 10. How many current employees have the equal longest overall time in their current positions (not in years)?
@@ -689,7 +689,7 @@ From mv_employees.department_employee
     ON A.department_id = B.department_id
   WHERE tenure = max_tenure;
 ````
-<img src="images/1_10.png" width="500"/>
+<img src="images/1_10.png" width="250"/>
 
 ## Ad-hoc requests about Employee Churn of company.
 
@@ -705,7 +705,7 @@ From mv_employees.historic_employee_records
 WHERE event_order = 1
   AND end_date != '9999-01-01'
  ````
- <img src="images/2_1.png" width="500"/>
+ <img src="images/2_1.png" width="250"/>
 
  
 ### 2. What percentage of churn employees were male?
@@ -736,7 +736,7 @@ WITH cte AS (
   FROM male_cte 
   CROSS JOIN cte;
 ````
-<img src="images/2_2.png" width="500"/>
+<img src="images/2_2.png" width="250"/>
 
 
 ### 3. Which title had the most churn?
@@ -812,7 +812,7 @@ From mv_employees.historic_employee_records
 WHERE event_order = 1
   AND end_date != '9999-01-01';
 ````
-<img src="images/2_7.png" width="500"/>
+<img src="images/2_7.png" width="250"/>
 
 ### 8. On average, how many different titles did each churn employee hold rounded to 1 decimal place?
 
@@ -844,7 +844,7 @@ WITH churn_employee AS (
     ROUND(AVG(title_count),2)
   From title_count;
 ````
-<img src="images/2_9.png" width="500"/>
+<img src="images/2_9.png" width="250"/>
 
 
 ### 9. What was the average last pay increase for churn employees?
@@ -859,7 +859,7 @@ Select
     AND salary_change > 0;
 ````
 
- <img src="images/2_9png" width="300"/>
+ <img src="images/2_9png" width="500"/>
 
 
 
@@ -1052,7 +1052,7 @@ WITH employee_count_cte AS (
         ON A.department = B.department
     WHERE A.title = 'Manager';
 ````
-<img src="images/3_7.png" width="300"/>
+<img src="images/3_7.png" width="500"/>
 
  ### 8. What is the difference in employee count between the 3rd and 4th ranking departments by size?
 
