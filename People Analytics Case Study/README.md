@@ -497,7 +497,8 @@ Select
 FROM mv_employees.current_overview A, cte
 WHERE title_tenure_year = longest;
 ````
-#### Insight:
+<img src="People Analytics Case Study/images/1_!.png" width="200"/>
+
 
 
 ### 2. Which department has the least number of current employees?
