@@ -894,7 +894,10 @@ WHERE to_date = '9999-01-01';
 
 
  ### 2. How many employees have ever been a manager?
-
+ 
+#### Steps:
+- Firstly, I fetched employees who had been a manager. I used **LEFT SEMI JOIN** to avoid duplication.
+- Finally, I counted them from **CTE** just created.
 ````sql
 WITH cte AS (
 Select
@@ -915,6 +918,10 @@ WHERE EXISTS (
 
  ### 3. On average - how long did it take for an employee to first become a manager from their the date they were originally hired in days?
 
+#### Steps:
+- Firstly, I fetched employees who had been a manager and their first_date when They became managers.
+- Finally, I calculated average duration from the very date they came to company to date when they became managers
+
 ````sql
 WITH first_date AS (
 SELECT 
@@ -932,29 +939,36 @@ GROUP BY employee_id
 ````
 
 
-
-
  ### 4. What was the most common titles that managers had just before before they became a manager?
 
+#### Steps:
+- Firstly, I found all previous tiltes of all employees
+- Finally, I counted them from **CTE** just created, with filter that they are managers and previous_title IS NOT NULL.
+
+
 ````sql
-WITH lag_jobs AS (
+WITH lag_title AS (
 SELECT
   employee_id,
   title,
-  LAG(title) OVER (PARTITION  BY employee_id ORDER BY from_date) AS previous_job
+  LAG(title) OVER (PARTITION  BY employee_id ORDER BY from_date) AS previous_title
 FROM mv_employees.title 
 )
   Select
-    previous_job,
+    previous_title,
     COUNT(*) as count_title
-  FROM lag_jobs
+  FROM lag_title
   WHERE title = 'Manager'
-    AND previous_job IS NOT NULL
-  GROUP BY previous_job;
+    AND previous_title IS NOT NULL
+  GROUP BY previous_title;
 ````
 
 
  ### 5. How many managers were first hired by the company as a manager?
+ 
+ #### Steps:
+- Firstly, I found all previous tiltes of all employees
+- Finally, I counted them from **CTE** just created, with filter that they are managers and previous_title IS NULL.
 
 ````sql
 WITH lag_jobs AS (
@@ -972,10 +986,12 @@ FROM mv_employees.title
 ````
 
 
-
-
-
  ### 6. On average - how much more do current managers make on average compared to all other employees rounded to the nearest dollar?
+ 
+#### Steps:
+- Firstly, I calculated average salary of all current managers.
+- Then I calculated average salary of all employees who are not employees
+- Finally, I calculated the differences between those above average.
 
 ````sql
 WITH manager_cte AS (
@@ -997,6 +1013,11 @@ WITH manager_cte AS (
 
 
  ### 7. Which current manager has the most employees in their department?
+
+#### Steps:
+- Firstly, I counted employees for each deparment, excluding managers. I only fetched department which has most employees .
+- Finally, I joined current_overview table with the cte just created. Then I extracted only manager
+
 
 ````sql
 WITH employee_count_cte AS (
@@ -1020,6 +1041,11 @@ WITH employee_count_cte AS (
 
 
  ### 8. What is the difference in employee count between the 3rd and 4th ranking departments by size?
+
+#### Steps:
+- Firstly, I counted employees for each deparment, including managers.
+- The I created another **CTE** which contains rank of the size between departments and also their differences
+- Finally, I extracted the size difference for the 3th department and 4th department
 
 ````sql
 WITH dept_size AS (
