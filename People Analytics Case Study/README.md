@@ -859,8 +859,7 @@ Select
     AND salary_change > 0;
 ````
 
- <img src="images/2_9png" width="500"/>
-
+ <img src="images/2_9.png" width="250"/>
 
 
 ### 10. What percentage of churn employees had a pay decrease event in their last 5 events?
@@ -998,7 +997,7 @@ FROM mv_employees.title
   WHERE title = 'Manager'
     AND previous_job IS  NULL;
 ````
-<img src="images/3_5.png" width="300"/>
+<img src="images/3_5.png" width="250"/>
 
  ### 6. On average - how much more do current managers make on average compared to all other employees rounded to the nearest dollar?
  
@@ -1024,7 +1023,7 @@ WITH manager_cte AS (
     ROUND(manager_salary - staff_salary)
   From staff_cte, manager_cte;
 ````
-<img src="images/3_6.png" width="300"/>
+<img src="images/3_6.png" width="250"/>
 
  ### 7. Which current manager has the most employees in their department?
 
