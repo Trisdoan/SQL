@@ -1,16 +1,22 @@
-# Case Study: People Analytics Case Study
+# :couple: Case Study: People Analytics Case Study
 
 CREDIT: Danny Ma.
 
 You can view his course here: https://www.datawithdanny.com/
 
 
-# Project Overview
+## :page_facing_up: Project Overview
 
+### Objectives
 Assist HR Analytica to construct datasets to answer basic reporting questions and also feed their bespoke People Analytics dashboards.
 
-# Summarized Insights
+### Summarized Insights
 
+### :ledger: Table of contents
+1. [Data Cleaning](#data-cleaning)
+2. [Ad-hoc requests about current status of company](#ad-hoc-requests-about-current-status-of-company)
+3. [Ad-hoc requests about Employee Churn of company.](#ad-hoc-requests-about-employee-churn-of-company)
+4. [Ad-hoc requests about management analysis of company.](#ad-hoc-requests-about-management-analysis-of-company)
 
 ## Data Cleaning
 
