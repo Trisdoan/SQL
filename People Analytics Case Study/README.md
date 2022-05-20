@@ -497,7 +497,7 @@ Select
 FROM mv_employees.current_overview A, cte
 WHERE title_tenure_year = longest;
 ````
-<img src="People Analytics Case Study/images/1_!.png" width="300"/>
+<img src="People_Analytics_Case_Study/images/1_!.png" width="300"/>
 
 So there are more than 24k employees who have been worked for the company for so long.
 
@@ -514,8 +514,9 @@ From mv_employees.current_overview
 Group by department
 Order by count(*);
 ````
-<img src="People Analytics Case Study/images/1_2.png" width="300"/>
+<img src="People Analytics Case Study/images/1_2.png" width="100"/>
 
+The department which has least employees is Finance. It's sad because I love Finance :(
 
 
 ### 3. What is the largest difference between minimimum and maximum salary values for all current employees?
@@ -526,7 +527,7 @@ Select
 From mv_employees.current_overview;
 ````
 <img src="People Analytics Case Study/images/1_3.png" width="300"/>
-
+The difference between people having largers salary and the one having least salary is almost 120k. That's a big gap. However, there are some outliers such as CEOs who of course earn a lot more than juniors.
 
 
 ### 4. How many male employees are above the overall average salary value for the `Production` department?
@@ -557,7 +558,7 @@ WHERE  department = 'Production'
 AND current_salary > average_salary ;
 ````
 <img src="People Analytics Case Study/images/1_4.png" width="300"/>
-
+In the "Production" department, there are 14999 male employees who earn more than average salary of the deparment.
 
 
 ### 5. Which title has the highest average salary for male employees?
@@ -578,6 +579,7 @@ Select
 ````
 <img src="People Analytics Case Study/images/1_5.png" width="300"/>
 
+So "Senior staff" title earns highest average salary for males
 
 
 ### 6. Which department has the highest average salary for female employees?
@@ -597,6 +599,7 @@ Select
 ````
 <img src="People Analytics Case Study/images/1_6.png" width="300"/>
 
+Female employees in Sale department earn highest average salary, roughly 88k
 
 ### 7. Which department has the most female employees?
 
@@ -612,6 +615,7 @@ ORDER BY COUNT(employee) desc;
 ````
 <img src="People Analytics Case Study/images/1_7.png" width="300"/>
 
+Currently, "Development" department has the most female employees
 
 
 ### 8. What is the gender ratio in the department which has the highest average male salary and what is the average male salary value rounded to the nearest integer?
@@ -634,13 +638,15 @@ WITH cte AS (
   Select
     gender,
     average_salary,
-    COUNT(*) AS number_employee
+    ROUND(COUNT(*)/SUM(COUNT(*)) OVER()::NUMERIC,2) AS number_employee
   From mv_employees.current_overview A 
   INNER JOIN cte B 
     ON A.department = B.department
   GROUP BY gender, average_salary;
 ````
 <img src="People Analytics Case Study/images/1_8.png" width="300"/>
+
+So in the highest paid department, 60% are male employees, who earn 88k on average
 
 
 ### 9. HR Analytica want to change the average salary increase percentage value to 2 decimal places. What should the new value be for males for the company level dashboard?
@@ -782,7 +788,6 @@ GROUP BY EXTRACT('year' from end_date)
 ORDER BY churn_employee DESC;
 ````
 <img src="People Analytics Case Study/images/2_5.png" width="300"/>
-
 
 ### 6. What was the average salary for each employees who has left the company rounded to the nearest integer?
 
