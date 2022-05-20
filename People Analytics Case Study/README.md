@@ -497,7 +497,7 @@ Select
 FROM mv_employees.current_overview A, cte
 WHERE title_tenure_year = longest;
 ````
-<img src="People Analytics Case Study/images/1_!.png" width="200"/>
+<img src="People Analytics Case Study/images/1_!.png" width="300"/>
 
 
 
@@ -514,7 +514,8 @@ From mv_employees.current_overview
 Group by department
 Order by count(*);
 ````
-#### Insight:
+<img src="People Analytics Case Study/images/1_2.png" width="300"/>
+
 
 
 ### 3. What is the largest difference between minimimum and maximum salary values for all current employees?
@@ -524,7 +525,7 @@ Select
   MAX(current_salary) - MIN(current_salary)
 From mv_employees.current_overview;
 ````
-#### Insight:
+<img src="People Analytics Case Study/images/1_3.png" width="300"/>
 
 
 
@@ -555,7 +556,7 @@ WHERE  department = 'Production'
   WHERE  gender = 'M'
 AND current_salary > average_salary ;
 ````
-#### Insight:
+<img src="People Analytics Case Study/images/1_4.png" width="300"/>
 
 
 
@@ -575,7 +576,8 @@ Select
   ORDER BY AVG(current_salary) DESC
   Limit 1;
 ````
-#### Insight:
+<img src="People Analytics Case Study/images/1_5.png" width="300"/>
+
 
 
 ### 6. Which department has the highest average salary for female employees?
@@ -593,7 +595,7 @@ Select
   ORDER BY AVG(current_salary) DESC
   Limit 1;
 ````
-#### Insight:
+<img src="People Analytics Case Study/images/1_6.png" width="300"/>
 
 
 ### 7. Which department has the most female employees?
@@ -608,6 +610,7 @@ WHERE gender = 'F'
 GROUP BY department
 ORDER BY COUNT(employee) desc;
 ````
+<img src="People Analytics Case Study/images/1_7.png" width="300"/>
 
 
 
@@ -637,6 +640,7 @@ WITH cte AS (
     ON A.department = B.department
   GROUP BY gender, average_salary;
 ````
+<img src="People Analytics Case Study/images/1_8.png" width="300"/>
 
 
 ### 9. HR Analytica want to change the average salary increase percentage value to 2 decimal places. What should the new value be for males for the company level dashboard?
@@ -648,8 +652,9 @@ Select
 From mv_employees.current_overview
 GROUP BY gender;
 ````
-   
-    
+<img src="People Analytics Case Study/images/1_9.png" width="300"/>
+
+
 ### 10. How many current employees have the equal longest overall time in their current positions (not in years)?
 
 #### Steps:
@@ -679,6 +684,7 @@ From mv_employees.department_employee
   WHERE tenure = max_tenure;
 ````
 
+<img src="People Analytics Case Study/images/1_10.png" width="300"/>
 
 ## Ad-hoc requests about Employee Churn of company.
 
