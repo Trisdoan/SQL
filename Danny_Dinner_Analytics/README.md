@@ -1,18 +1,19 @@
-# Case Study: Danny Dinner
+# :sushi: Case Study: Danny Dinner
 CREDIT: Danny Ma.
 
 You can view his challenge here: https://8weeksqlchallenge.com/case-study-1/
 
-## Case Study Overview
+## :books: Overview
 Help the owner of the restauntant to generate some datasets so his team can easily inspect the data without needing to use SQL.
 
-**1. Visiting patterns**
+### Objectives
+1. Visiting patterns
 
-**2. Amount customers have spent**
+2. Amount customers have spent
 
-**3. Top favorite products**
+3. Top favorite products
 
-## Summarized Insights
+### Summarized Insights
 
 1. So far, **customer A spent the most**, followed by customer B and C
 2. However, **customer B visited the restaurant quite often**.
@@ -20,7 +21,7 @@ Help the owner of the restauntant to generate some datasets so his team can easi
 4. After becoming member, customer A purchased curry, while customer B purchased sushi. **Customer C has not been a member yet**.
 
 
-## Techniques I used:
+### Techniques I used:
 1. CTE
 2. Windown function: ROW_NUMBER, RANK()
 3. Aggregate functions: SUM, COUNT
