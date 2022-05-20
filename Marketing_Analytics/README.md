@@ -1,24 +1,29 @@
-# Case Study: Marketing Analytics
+# :cd: Case Study: Marketing Analytics
 CREDIT: Danny Ma.
 
 You can view his course here: https://www.datawithdanny.com/
 
+## :computer: Project Overview
 
-# Project Overview
+### Situation
 Customer analytics team at DVD Rental Co who have been tasked with generating the necessary data points required to populate specific parts of this first-ever customer email campaign. Imagine that I am a fresher data analyst of the team. My supervisor, who is experience data leader(Mr. Danny), gave a solution plan. I will follow that plan to solve the problem.
 
-# Summarized Insights
+### Objectives
+1. Generating data points for an upcoming email marketing campaign
+2. Reporting ad-hoc requests
+
+### Summarized Insights
 
 1. There are 27 films rented average by each customers.
 2. The most popular category is Animation. It's interesting. Probably it's related to age of customers. We need more data about customer profiles
 3. The most popular actor is GINA DEGENERES. The company should work more with this actor when lots of customers demand her.
 4. The most popular title is Juggler Hardy.
 
-# Here is the approach to solve the problem
 
-There are 2 big steps:
-* Main report: it contains all steps to solve the problem. At the end, there is final report which contrains information about customers who rented films and recommendations for them.
-* Extra insights: there are 11 questions that can be asked by the marketing team.
+## :notebook_with_decorative_cover: Table Of Content
+
+1. [Main report](#main-report)
+2. [Ad-hoc requests](#questions-from-marketing-team)
 
 ## Main report
 
