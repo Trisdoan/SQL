@@ -497,7 +497,7 @@ Select
 FROM mv_employees.current_overview A, cte
 WHERE title_tenure_year = longest;
 ````
-<img src="People_Analytics_Case_Study/images/1_!.png" width="300"/>
+<img src="images/1_!.png" width="300"/>
 
 So there are more than 24k employees who have been worked for the company for so long.
 
@@ -514,7 +514,7 @@ From mv_employees.current_overview
 Group by department
 Order by count(*);
 ````
-<img src="People Analytics Case Study/images/1_2.png" width="100"/>
+<img src="images/1_2.png" width="300"/>
 
 The department which has least employees is Finance. It's sad because I love Finance :(
 
@@ -526,7 +526,7 @@ Select
   MAX(current_salary) - MIN(current_salary)
 From mv_employees.current_overview;
 ````
-<img src="People Analytics Case Study/images/1_3.png" width="300"/>
+<img src="images/1_3.png" width="300"/>
 The difference between people having largers salary and the one having least salary is almost 120k. That's a big gap. However, there are some outliers such as CEOs who of course earn a lot more than juniors.
 
 
@@ -557,7 +557,7 @@ WHERE  department = 'Production'
   WHERE  gender = 'M'
 AND current_salary > average_salary ;
 ````
-<img src="People Analytics Case Study/images/1_4.png" width="300"/>
+<img src="images/1_4.png" width="500"/>
 In the "Production" department, there are 14999 male employees who earn more than average salary of the deparment.
 
 
@@ -577,7 +577,7 @@ Select
   ORDER BY AVG(current_salary) DESC
   Limit 1;
 ````
-<img src="People Analytics Case Study/images/1_5.png" width="300"/>
+<img src="images/1_5.png" width="500"/>
 
 So "Senior staff" title earns highest average salary for males
 
@@ -597,7 +597,7 @@ Select
   ORDER BY AVG(current_salary) DESC
   Limit 1;
 ````
-<img src="People Analytics Case Study/images/1_6.png" width="300"/>
+<img src="images/1_6.png" width="500"/>
 
 Female employees in Sale department earn highest average salary, roughly 88k
 
@@ -613,7 +613,7 @@ WHERE gender = 'F'
 GROUP BY department
 ORDER BY COUNT(employee) desc;
 ````
-<img src="People Analytics Case Study/images/1_7.png" width="300"/>
+<img src="images/1_7.png" width="500"/>
 
 Currently, "Development" department has the most female employees
 
@@ -644,7 +644,7 @@ WITH cte AS (
     ON A.department = B.department
   GROUP BY gender, average_salary;
 ````
-<img src="People Analytics Case Study/images/1_8.png" width="300"/>
+<img src="images/1_8.png" width="500"/>
 
 So in the highest paid department, 60% are male employees, who earn 88k on average
 
@@ -658,7 +658,7 @@ Select
 From mv_employees.current_overview
 GROUP BY gender;
 ````
-<img src="People Analytics Case Study/images/1_9.png" width="300"/>
+<img src="images/1_9.png" width="500"/>
 
 
 ### 10. How many current employees have the equal longest overall time in their current positions (not in years)?
@@ -689,8 +689,7 @@ From mv_employees.department_employee
     ON A.department_id = B.department_id
   WHERE tenure = max_tenure;
 ````
-
-<img src="People Analytics Case Study/images/1_10.png" width="300"/>
+<img src="images/1_10.png" width="500"/>
 
 ## Ad-hoc requests about Employee Churn of company.
 
@@ -706,7 +705,7 @@ From mv_employees.historic_employee_records
 WHERE event_order = 1
   AND end_date != '9999-01-01'
  ````
- <img src="People Analytics Case Study/images/2_1.png" width="300"/>
+ <img src="images/2_1.png" width="500"/>
 
  
 ### 2. What percentage of churn employees were male?
@@ -737,7 +736,7 @@ WITH cte AS (
   FROM male_cte 
   CROSS JOIN cte;
 ````
- <img src="People Analytics Case Study/images/2_2.png" width="300"/>
+<img src="images/2_2.png" width="500"/>
 
 
 ### 3. Which title had the most churn?
@@ -753,7 +752,7 @@ WHERE event_order = 1
 GROUP BY title
 ORDER BY churn_employee DESC;
 ````
- <img src="People Analytics Case Study/images/2_3.png" width="300"/>
+ <img src="images/2_3.png" width="500"/>
 
 ### 4. Which department had the most churn?
 
@@ -768,8 +767,7 @@ WHERE event_order = 1
 GROUP BY department
 ORDER BY churn_employee DESC;
 ````
-<img src="People Analytics Case Study/images/2_4.png" width="300"/>
-
+<img src="images/2_4.png" width="500"/>
 
 ### 5. Which year had the most churn?
 
@@ -787,7 +785,7 @@ WHERE event_order = 1
 GROUP BY EXTRACT('year' from end_date)
 ORDER BY churn_employee DESC;
 ````
-<img src="People Analytics Case Study/images/2_5.png" width="300"/>
+<img src="images/2_5.png" width="500"/>
 
 ### 6. What was the average salary for each employees who has left the company rounded to the nearest integer?
 
@@ -800,7 +798,7 @@ From mv_employees.historic_employee_records
 WHERE event_order = 1
   AND end_date != '9999-01-01';
 ````
-<img src="People Analytics Case Study/images/2_6.png" width="300"/>
+<img src="images/2_6.png" width="500"/>
 
 ### 7. What was the median total company tenure for each churn employee just bfore they left?
 
@@ -814,7 +812,7 @@ From mv_employees.historic_employee_records
 WHERE event_order = 1
   AND end_date != '9999-01-01';
 ````
-<img src="People Analytics Case Study/images/2_7.png" width="300"/>
+<img src="images/2_7.png" width="500"/>
 
 ### 8. On average, how many different titles did each churn employee hold rounded to 1 decimal place?
 
@@ -846,7 +844,7 @@ WITH churn_employee AS (
     ROUND(AVG(title_count),2)
   From title_count;
 ````
-<img src="People Analytics Case Study/images/2_8.png" width="300"/>
+<img src="images/2_9.png" width="500"/>
 
 
 ### 9. What was the average last pay increase for churn employees?
@@ -861,7 +859,7 @@ Select
     AND salary_change > 0;
 ````
 
- <img src="People Analytics Case Study/images/2_9.png" width="300"/>
+ <img src="images/2_9png" width="300"/>
 
 
 
@@ -895,7 +893,7 @@ WITH decreased_salary AS (
   FROM decreased_salary;
 ````
 
- <img src="People Analytics Case Study/images/2_10.png" width="300"/>
+ <img src="images/2_10.png" width="300"/>
     
  # Ad-hoc requests about management analysis of company.
  
@@ -906,7 +904,7 @@ Select count(*)
 From mv_employees.department_manager
 WHERE to_date = '9999-01-01';
 ````
-<img src="People Analytics Case Study/images/3_1.png" width="300"/>
+<img src="images/3_1.png" width="300"/>
 
 
  ### 2. How many employees have ever been a manager?
@@ -929,7 +927,7 @@ WHERE EXISTS (
     COUNT(*)
   FROM cte;
 ````
-<img src="People Analytics Case Study/images/3_2.png" width="300"/>
+<img src="images/3_2.png" width="300"/>
 
 
  ### 3. On average - how long did it take for an employee to first become a manager from their the date they were originally hired in days?
@@ -953,7 +951,7 @@ GROUP BY employee_id
   INNER JOIN first_date B 
       ON A.id = B.employee_id;
 ````
-<img src="People Analytics Case Study/images/3_3.png" width="300"/>
+<img src="images/3_3.png" width="300"/>
 
  ### 4. What was the most common titles that managers had just before before they became a manager?
 
@@ -978,8 +976,7 @@ FROM mv_employees.title
     AND previous_title IS NOT NULL
   GROUP BY previous_title;
 ````
-<img src="People Analytics Case Study/images/3_4.png" width="300"/>
-
+<img src="images/3_4.png" width="300"/>
 
  ### 5. How many managers were first hired by the company as a manager?
  
@@ -1001,7 +998,7 @@ FROM mv_employees.title
   WHERE title = 'Manager'
     AND previous_job IS  NULL;
 ````
-<img src="People Analytics Case Study/images/3_5.png" width="300"/>
+<img src="images/3_5.png" width="300"/>
 
  ### 6. On average - how much more do current managers make on average compared to all other employees rounded to the nearest dollar?
  
@@ -1027,7 +1024,7 @@ WITH manager_cte AS (
     ROUND(manager_salary - staff_salary)
   From staff_cte, manager_cte;
 ````
-<img src="People Analytics Case Study/images/3_6.png" width="300"/>
+<img src="images/3_6.png" width="300"/>
 
  ### 7. Which current manager has the most employees in their department?
 
@@ -1055,7 +1052,7 @@ WITH employee_count_cte AS (
         ON A.department = B.department
     WHERE A.title = 'Manager';
 ````
-<img src="People Analytics Case Study/images/3_8.png" width="300"/>
+<img src="images/3_7.png" width="300"/>
 
  ### 8. What is the difference in employee count between the 3rd and 4th ranking departments by size?
 
@@ -1083,6 +1080,6 @@ GROUP BY department
   FROM ranked_dept
   WHERE ranked_ = 3;
 ````
-<img src="People Analytics Case Study/images/3_8.png" width="300"/>
+<img src="images/3_8.png" width="500"/>
 
 
