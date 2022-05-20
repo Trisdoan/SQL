@@ -499,7 +499,7 @@ WHERE title_tenure_year = longest;
 ````
 <img src="People Analytics Case Study/images/1_!.png" width="300"/>
 
-
+People Analytics Case Study/images/2_1.png
 
 ### 2. Which department has the least number of current employees?
 
@@ -700,6 +700,8 @@ From mv_employees.historic_employee_records
 WHERE event_order = 1
   AND end_date != '9999-01-01'
  ````
+ <img src="People Analytics Case Study/images/2_1.png" width="300"/>
+
  
 ### 2. What percentage of churn employees were male?
 
@@ -729,7 +731,7 @@ WITH cte AS (
   FROM male_cte 
   CROSS JOIN cte;
 ````
-
+ <img src="People Analytics Case Study/images/2_2.png" width="300"/>
 
 
 ### 3. Which title had the most churn?
@@ -745,7 +747,7 @@ WHERE event_order = 1
 GROUP BY title
 ORDER BY churn_employee DESC;
 ````
-
+ <img src="People Analytics Case Study/images/2_3.png" width="300"/>
 
 ### 4. Which department had the most churn?
 
@@ -759,8 +761,8 @@ WHERE event_order = 1
   AND end_date != '9999-01-01'
 GROUP BY department
 ORDER BY churn_employee DESC;
-  
 ````
+<img src="People Analytics Case Study/images/2_4.png" width="300"/>
 
 
 ### 5. Which year had the most churn?
@@ -779,7 +781,7 @@ WHERE event_order = 1
 GROUP BY EXTRACT('year' from end_date)
 ORDER BY churn_employee DESC;
 ````
-
+<img src="People Analytics Case Study/images/2_5.png" width="300"/>
 
 
 ### 6. What was the average salary for each employees who has left the company rounded to the nearest integer?
@@ -793,7 +795,7 @@ From mv_employees.historic_employee_records
 WHERE event_order = 1
   AND end_date != '9999-01-01';
 ````
-
+<img src="People Analytics Case Study/images/2_6.png" width="300"/>
 
 ### 7. What was the median total company tenure for each churn employee just bfore they left?
 
@@ -807,6 +809,7 @@ From mv_employees.historic_employee_records
 WHERE event_order = 1
   AND end_date != '9999-01-01';
 ````
+<img src="People Analytics Case Study/images/2_7.png" width="300"/>
 
 ### 8. On average, how many different titles did each churn employee hold rounded to 1 decimal place?
 
@@ -838,7 +841,7 @@ WITH churn_employee AS (
     ROUND(AVG(title_count),2)
   From title_count;
 ````
-
+<img src="People Analytics Case Study/images/2_8.png" width="300"/>
 
 
 ### 9. What was the average last pay increase for churn employees?
@@ -853,6 +856,7 @@ Select
     AND salary_change > 0;
 ````
 
+ <img src="People Analytics Case Study/images/2_9.png" width="300"/>
 
 
 
@@ -886,7 +890,7 @@ WITH decreased_salary AS (
   FROM decreased_salary;
 ````
 
-
+ <img src="People Analytics Case Study/images/2_10.png" width="300"/>
     
  # Ad-hoc requests about management analysis of company.
  
@@ -897,7 +901,7 @@ Select count(*)
 From mv_employees.department_manager
 WHERE to_date = '9999-01-01';
 ````
-
+<img src="People Analytics Case Study/images/3_1.png" width="300"/>
 
 
  ### 2. How many employees have ever been a manager?
@@ -920,7 +924,7 @@ WHERE EXISTS (
     COUNT(*)
   FROM cte;
 ````
-
+<img src="People Analytics Case Study/images/3_2.png" width="300"/>
 
 
  ### 3. On average - how long did it take for an employee to first become a manager from their the date they were originally hired in days?
@@ -944,7 +948,7 @@ GROUP BY employee_id
   INNER JOIN first_date B 
       ON A.id = B.employee_id;
 ````
-
+<img src="People Analytics Case Study/images/3_3.png" width="300"/>
 
  ### 4. What was the most common titles that managers had just before before they became a manager?
 
@@ -969,6 +973,7 @@ FROM mv_employees.title
     AND previous_title IS NOT NULL
   GROUP BY previous_title;
 ````
+<img src="People Analytics Case Study/images/3_4.png" width="300"/>
 
 
  ### 5. How many managers were first hired by the company as a manager?
@@ -991,7 +996,7 @@ FROM mv_employees.title
   WHERE title = 'Manager'
     AND previous_job IS  NULL;
 ````
-
+<img src="People Analytics Case Study/images/3_5.png" width="300"/>
 
  ### 6. On average - how much more do current managers make on average compared to all other employees rounded to the nearest dollar?
  
@@ -1017,7 +1022,7 @@ WITH manager_cte AS (
     ROUND(manager_salary - staff_salary)
   From staff_cte, manager_cte;
 ````
-
+<img src="People Analytics Case Study/images/3_6.png" width="300"/>
 
  ### 7. Which current manager has the most employees in their department?
 
@@ -1045,7 +1050,7 @@ WITH employee_count_cte AS (
         ON A.department = B.department
     WHERE A.title = 'Manager';
 ````
-
+<img src="People Analytics Case Study/images/3_8.png" width="300"/>
 
  ### 8. What is the difference in employee count between the 3rd and 4th ranking departments by size?
 
@@ -1073,6 +1078,6 @@ GROUP BY department
   FROM ranked_dept
   WHERE ranked_ = 3;
 ````
-
+<img src="People Analytics Case Study/images/3_8.png" width="300"/>
 
 
