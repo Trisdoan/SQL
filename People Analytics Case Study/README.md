@@ -499,7 +499,7 @@ WHERE title_tenure_year = longest;
 ````
 <img src="People Analytics Case Study/images/1_!.png" width="300"/>
 
-People Analytics Case Study/images/2_1.png
+So there are more than 24k employees who have been worked for the company for so long.
 
 ### 2. Which department has the least number of current employees?
 
