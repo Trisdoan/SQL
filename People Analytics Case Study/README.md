@@ -844,7 +844,7 @@ WITH churn_employee AS (
     ROUND(AVG(title_count),2)
   From title_count;
 ````
-<img src="images/2_9.png" width="250"/>
+<img src="images/2_8.png" width="250"/>
 
 
 ### 9. What was the average last pay increase for churn employees?
